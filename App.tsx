@@ -1,6 +1,6 @@
 import { View, Text } from 'react-native'
 import SplashScreen from 'react-native-splash-screen'
-import { useEffect } from 'react'
+import React, { useEffect } from 'react'
 
 const App = (): JSX.Element => {
     useEffect(() => {
