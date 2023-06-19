@@ -1,6 +1,8 @@
-import { View, Text } from 'react-native'
-import SplashScreen from 'react-native-splash-screen'
+import 'react-native-gesture-handler'
 import React, { useEffect } from 'react'
+import { NavigationContainer } from '@react-navigation/native'
+import SplashScreen from 'react-native-splash-screen'
+import Navigator from './src/navigations/Navigator'
 
 const App = (): JSX.Element => {
     useEffect(() => {
@@ -8,9 +10,9 @@ const App = (): JSX.Element => {
     }, [])
 
     return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <Text>Hey</Text>
-        </View>
+        <NavigationContainer>
+            <Navigator />
+        </NavigationContainer>
     )
 }
 

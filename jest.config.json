@@ -1,0 +1,9 @@
+{
+    "preset": "react-native",
+    "testEnvironment": "node",
+    "transform": {
+        "^.+\\.js$": "babel-jest"
+    },
+    "setupFiles": ["<rootDir>/node_modules/react-native/jest/setup.js"],
+    "testPathIgnorePatterns": ["/node_modules/"]
+}
