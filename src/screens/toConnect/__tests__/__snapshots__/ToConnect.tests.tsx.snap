@@ -1,0 +1,156 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ToConnect Screen should render correctly 1`] = `
+<RCTSafeAreaView>
+  <RCTScrollView
+    style={
+      {
+        "backgroundColor": "#fff",
+        "height": "100%",
+        "padding": 20,
+        "width": "100%",
+      }
+    }
+  >
+    <View>
+      <View
+        style={
+          {
+            "alignItems": "center",
+            "flexDirection": "row",
+            "justifyContent": "space-between",
+            "marginVertical": 30,
+          }
+        }
+      >
+        <Image
+          source={
+            {
+              "testUri": "../../../src/assets/images/pharmalogo.png",
+            }
+          }
+          style={{}}
+        />
+        <Image
+          source={
+            {
+              "testUri": "../../../src/assets/images/doctorHeadset.png",
+            }
+          }
+          style={{}}
+        />
+      </View>
+      <View
+        style={
+          {
+            "alignItems": "center",
+            "justifyContent": "center",
+          }
+        }
+      >
+        <Image
+          source={
+            {
+              "testUri": "../../../src/assets/images/toConnectImg.png",
+            }
+          }
+          style={
+            {
+              "height": 667,
+              "resizeMode": "contain",
+              "width": "100%",
+            }
+          }
+          testID="toConnectImage"
+        />
+      </View>
+      <View
+        style={
+          {
+            "alignItems": "center",
+            "justifyContent": "center",
+          }
+        }
+      >
+        <Text
+          style={
+            {
+              "color": "#000",
+              "fontFamily": "Poppins-SemiBold",
+              "fontSize": 16,
+              "marginBottom": 10,
+            }
+          }
+        >
+          Le logiciel qu’il vous faut
+        </Text>
+        <Text
+          style={
+            {
+              "color": "#000",
+              "fontFamily": "Poppins-Regular",
+              "fontSize": 13,
+              "marginBottom": 20,
+            }
+          }
+        >
+          Sobrus Pharma est un logiciel développé pour vous apporter une meilleure gestion de votre officine.
+        </Text>
+      </View>
+      <View
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": false,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignSelf": "center",
+            "backgroundColor": "#00C1B3",
+            "borderRadius": 10,
+            "opacity": 1,
+            "paddingVertical": 20,
+            "width": "90%",
+          }
+        }
+        testID="Button"
+      >
+        <Text
+          style={
+            {
+              "color": "#fff",
+              "fontFamily": "Poppins-Meduim",
+              "fontSize": 16,
+              "textAlign": "center",
+            }
+          }
+        >
+          Se Connecter
+        </Text>
+      </View>
+    </View>
+  </RCTScrollView>
+</RCTSafeAreaView>
+`;
