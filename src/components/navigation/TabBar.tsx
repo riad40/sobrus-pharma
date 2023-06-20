@@ -79,13 +79,12 @@ const tabBarStyles = StyleSheet.create({
         backgroundColor: '#fff',
         width: '100%',
         borderTopColor: '#E2E2E2',
-        borderTopWidth: 1,
-        height: 60
+        borderTopWidth: 1
     },
     activeTab: {
         position: 'absolute',
         width: Dimensions.get('window').width / 5,
-        height: 3,
+        height: 4,
         backgroundColor: colors.primary,
         top: 0
     }
