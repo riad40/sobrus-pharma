@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { View, StyleSheet, Animated } from 'react-native'
+import React, { useEffect, useRef } from 'react'
+import { View, StyleSheet, Animated, Image, Text } from 'react-native'
 import colors from '../../constants/colors'
 
 const ProgressBar = ({ progress }: { progress: number }) => {
@@ -15,17 +15,15 @@ const ProgressBar = ({ progress }: { progress: number }) => {
         }).start()
     }
 
-    const [progressState, setProgressState] = useState<number>(progress)
-
     useEffect(() => {
         animateProgress()
-    }, [progressState])
+    }, [progress])
 
     return (
         <View style={styles.container}>
             <View style={styles.progressBG}>
-                <Animated.Image source={require('../../assets/images/refresh.png')} />
-                <Animated.Text style={styles.textProgress}>Syncing {progressState}%</Animated.Text>
+                <Image source={require('../../assets/images/refresh.png')} />
+                <Text style={styles.textProgress}>Syncing {progress}%</Text>
                 <Animated.View
                     style={[
                         styles.progress,
@@ -35,7 +33,7 @@ const ProgressBar = ({ progress }: { progress: number }) => {
                                 outputRange: ['0%', '100%']
                             })
                         },
-                        progressState === 100 && { borderBottomRightRadius: 40, borderTopRightRadius: 40 }
+                        progress === 100 && { borderTopRightRadius: 40, borderBottomRightRadius: 40 }
                     ]}
                 />
             </View>
@@ -77,7 +75,7 @@ const styles = StyleSheet.create({
         color: colors.primary,
         paddingLeft: 5,
         fontSize: 16,
-        fontFamily: 'Poppins-Regular',
+        fontFamily: 'Poppins-Medium',
         marginTop: 2,
         width: '60%'
     }
