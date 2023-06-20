@@ -8,4 +8,12 @@ type Product = {
     barcode: string
 }
 
-export type { Product }
+type Inventory = {
+    id: number
+    products: number[]
+    reason: string
+    status: string
+    date: string
+}
+
+export type { Product, Inventory }
