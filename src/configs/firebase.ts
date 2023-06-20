@@ -1,4 +1,5 @@
 import { initializeApp } from 'firebase/app'
+import { getFirestore } from 'firebase/firestore'
 import {
     FIREBASE_API_KEY,
     FIREBASE_AUTH_DOMAIN,
@@ -19,7 +20,6 @@ const firebaseConfig: Record<string, string | number> = {
     measurementId: FIREBASE_MEASUREMEMT_ID
 }
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig)
 
-export default app
+export const db = getFirestore(app)
