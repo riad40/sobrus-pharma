@@ -1,9 +1,8 @@
 import React from 'react'
-import { View, Text, StyleSheet, StatusBar, ScrollView } from 'react-native'
+import { View, Text, StyleSheet } from 'react-native'
 import { FONT_SIZE_24 } from '../../constants/fontsSizes'
 import colors from '../../constants/colors'
 import Ionicons from 'react-native-vector-icons/Ionicons'
-import { SCREEN_HEIGHT } from '../../constants/dimensions'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 
 interface ScreenContainerProps {
@@ -14,35 +13,28 @@ interface ScreenContainerProps {
 
 const ScreenContainer = ({ title, icon, children }: ScreenContainerProps): JSX.Element => {
     return (
-        <ScrollView bounces={false} showsVerticalScrollIndicator={false}>
-            <StatusBar backgroundColor={colors.primary} />
-            <View style={styles.mainContainer}>
-                <View style={styles.container}>
-                    {icon && (
-                        <View style={styles.icon}>
-                            <Ionicons name="arrow-back" size={20} color={colors.white} />
-                        </View>
-                    )}
-                    <Text style={styles.title}>{title}</Text>
-                </View>
+        <>
+            <View style={styles.container}>
+                {icon && (
+                    <View style={styles.icon}>
+                        <Ionicons name="arrow-back" size={20} color={colors.white} />
+                    </View>
+                )}
+                <Text style={styles.title}>{title}</Text>
             </View>
 
             <View style={styles.screenBody}>{children}</View>
-        </ScrollView>
+        </>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
-        alignItems: 'center',
         paddingHorizontal: wp(7),
-        paddingVertical: hp(4)
-    },
-
-    mainContainer: {
         backgroundColor: colors.primary,
-        height: SCREEN_HEIGHT - 700
+        height: hp(15),
+        paddingTop: hp(2)
     },
 
     title: {
@@ -56,20 +48,18 @@ const styles = StyleSheet.create({
         borderColor: colors.primary,
         borderWidth: wp(1),
         backgroundColor: '#80E3DE',
-        paddingVertical: wp(1),
-        paddingHorizontal: wp(1.2),
         alignItems: 'center',
-        borderRadius: wp(5)
+        width: wp(10),
+        height: wp(10),
+        borderRadius: wp(5),
+        justifyContent: 'center'
     },
 
     screenBody: {
-        position: 'relative',
-        bottom: SCREEN_HEIGHT - 800,
+        position: 'absolute',
+        top: hp(9),
         zIndex: 1,
-        width: '100%',
-        borderTopLeftRadius: wp(10),
-        borderTopRightRadius: wp(10),
-        justifyContent: 'center'
+        width: '100%'
     }
 })
 

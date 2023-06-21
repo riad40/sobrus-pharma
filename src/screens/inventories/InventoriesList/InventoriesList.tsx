@@ -1,6 +1,6 @@
 import React from 'react'
-import { ScreenContainer, StatusTabs, InventoryCard } from '../../../components'
-import { SafeAreaView, View } from 'react-native'
+import { ScreenContainer, StatusTabs, InventoryCard, CreateInventoryButton } from '../../../components'
+import { SafeAreaView, FlatList } from 'react-native'
 import inventoriesListStyles from './InventoriesList.styles'
 import { Inventory } from '../../../@types'
 
@@ -37,19 +37,26 @@ const InventoriesList = (): JSX.Element => {
     ]
 
     return (
-        <SafeAreaView>
-            <ScreenContainer title="Inventaires" icon={false}>
+        <SafeAreaView style={{ flex: 1 }}>
+            <ScreenContainer title="Inventaires" icon={true}>
                 <StatusTabs />
-                <View style={inventoriesListStyles.inventoriesContainer}>
-                    {inventories.map(inventory => (
-                        <InventoryCard
-                            key={inventory.id}
-                            inventories={inventory}
-                            onPress={() => console.log('pressed')}
-                        />
-                    ))}
-                </View>
             </ScreenContainer>
+
+            <FlatList
+                data={inventories}
+                renderItem={({ item }) => (
+                    <InventoryCard
+                        inventory={item}
+                        onPress={() => {
+                            console.log('hello')
+                        }}
+                    />
+                )}
+                keyExtractor={item => item.id.toString()}
+                contentContainerStyle={inventoriesListStyles.inventoriesContainer}
+            />
+
+            <CreateInventoryButton />
         </SafeAreaView>
     )
 }

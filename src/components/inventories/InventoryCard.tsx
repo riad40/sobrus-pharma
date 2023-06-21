@@ -6,15 +6,15 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import { FONT_SIZE_14, FONT_SIZE_12 } from '../../constants/fontsSizes'
 import colors from '../../constants/colors'
 
-interface StatusTabsProps {
-    inventories: Inventory
+interface InventoryCardProps {
+    inventory: Inventory
     onPress: () => void
 }
 
-const StatusTabs = ({ inventories, onPress }: StatusTabsProps): JSX.Element => {
-    const disabled = inventories.status === 'fermé' ? true : false
+const InventoryCard = ({ inventory, onPress }: InventoryCardProps): JSX.Element => {
+    const disabled = inventory.status === 'fermé' ? true : false
 
-    const { status } = inventories
+    const { status } = inventory
 
     return (
         <>
@@ -22,12 +22,12 @@ const StatusTabs = ({ inventories, onPress }: StatusTabsProps): JSX.Element => {
                 <View style={styles.cardContainer}>
                     <View style={styles.cardLeft}>
                         <View style={styles.cardLeftTop}>
-                            <Text style={styles.cardLeftTopTitle}>{inventories.reason}</Text>
-                            <Text style={styles.cardLeftTopId}>-0{inventories.id}</Text>
+                            <Text style={styles.cardLeftTopTitle}>{inventory.reason}</Text>
+                            <Text style={styles.cardLeftTopId}>-0{inventory.id}</Text>
                         </View>
                         <View style={styles.cardLeftBottom}>
                             <View style={styles.bottomLeftContainer}>
-                                <Text style={styles.dateText}>{inventories.date}</Text>
+                                <Text style={styles.dateText}>{inventory.date}</Text>
                             </View>
                             <View
                                 style={[
@@ -79,7 +79,8 @@ const styles = StyleSheet.create({
         paddingVertical: hp(2),
         paddingHorizontal: wp(5),
         borderRadius: wp(2),
-        marginBottom: hp(2)
+        marginBottom: hp(2),
+        marginHorizontal: wp(5)
     },
 
     cardLeft: {
@@ -141,4 +142,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default StatusTabs
+export default InventoryCard

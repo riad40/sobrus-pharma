@@ -6,5 +6,16 @@ import ComingSoon from './common/ComingSoon'
 import ScreenContainer from './common/ScreenContainer'
 import StatusTabs from './inventories/StatusTabs'
 import InventoryCard from './inventories/InventoryCard'
+import CreateInventoryButton from './inventories/CreateInventoryButton'
 
-export { NavBar, BackgroundImage, Button, ProgressBar, ComingSoon, ScreenContainer, StatusTabs, InventoryCard }
+export {
+    NavBar,
+    BackgroundImage,
+    Button,
+    ProgressBar,
+    ComingSoon,
+    ScreenContainer,
+    StatusTabs,
+    InventoryCard,
+    CreateInventoryButton
+}
