@@ -1,5 +1,11 @@
 import React from 'react'
-import { ScreenContainer, StatusTabs, InventoryCard, CreateInventoryButton } from '../../../components'
+import {
+    ScreenContainer,
+    StatusTabs,
+    InventoryCard,
+    CreateInventoryButton,
+    CreateInventoryModal
+} from '../../../components'
 import { SafeAreaView, FlatList } from 'react-native'
 import inventoriesListStyles from './InventoriesList.styles'
 import { Inventory } from '../../../@types'
@@ -7,6 +13,12 @@ import { useAppSelector, RootState } from '../../../state/store'
 
 const InventoriesList = (): JSX.Element => {
     const { inventories }: { inventories: Array<Inventory> } = useAppSelector((state: RootState) => state.inventories)
+
+    const [modalVisible, setModalVisible] = React.useState(false)
+
+    const toggleModal = () => {
+        setModalVisible(!modalVisible)
+    }
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
@@ -28,7 +40,9 @@ const InventoriesList = (): JSX.Element => {
                 contentContainerStyle={inventoriesListStyles.inventoriesContainer}
             />
 
-            <CreateInventoryButton />
+            <CreateInventoryButton onPress={toggleModal} />
+
+            <CreateInventoryModal visible={modalVisible} onClose={toggleModal} />
         </SafeAreaView>
     )
 }

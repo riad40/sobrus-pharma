@@ -4,10 +4,14 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import colors from '../../constants/colors'
 
-const CreateInventoryButton = (): JSX.Element => {
+interface CreateInventoryButtonProps {
+    onPress: () => void
+}
+
+const CreateInventoryButton = ({ onPress }: CreateInventoryButtonProps): JSX.Element => {
     return (
         <View style={styles.container}>
-            <Pressable style={styles.button}>
+            <Pressable style={styles.button} onPress={onPress}>
                 <Ionicons name="add-sharp" size={30} color={colors.white} />
             </Pressable>
         </View>
