@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, StatusBar } from 'react-native'
 import { FONT_SIZE_24 } from '../../constants/fontsSizes'
 import colors from '../../constants/colors'
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -14,6 +14,7 @@ interface ScreenContainerProps {
 const ScreenContainer = ({ title, icon, children }: ScreenContainerProps): JSX.Element => {
     return (
         <>
+            <StatusBar backgroundColor={colors.primary} />
             <View style={styles.container}>
                 {icon && (
                     <View style={styles.icon}>
