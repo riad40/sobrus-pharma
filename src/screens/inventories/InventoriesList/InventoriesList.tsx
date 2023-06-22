@@ -3,38 +3,10 @@ import { ScreenContainer, StatusTabs, InventoryCard, CreateInventoryButton } fro
 import { SafeAreaView, FlatList } from 'react-native'
 import inventoriesListStyles from './InventoriesList.styles'
 import { Inventory } from '../../../@types'
+import { useAppSelector, RootState } from '../../../state/store'
 
 const InventoriesList = (): JSX.Element => {
-    const inventories: Inventory[] = [
-        {
-            id: 1,
-            date: '12/12/2021',
-            reason: 'Inventaire annuel',
-            status: 'fermé',
-            products: [1, 2]
-        },
-        {
-            id: 2,
-            date: '12/12/2021',
-            reason: 'Inventaire annuel',
-            status: 'ouvert',
-            products: [1, 2]
-        },
-        {
-            id: 3,
-            date: '12/12/2021',
-            reason: 'Inventaire annuel',
-            status: 'fermé',
-            products: [1, 2]
-        },
-        {
-            id: 4,
-            date: '12/12/2021',
-            reason: 'Inventaire annuel',
-            status: 'ouvert',
-            products: [1, 2]
-        }
-    ]
+    const { inventories }: { inventories: Array<Inventory> } = useAppSelector((state: RootState) => state.inventories)
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
@@ -52,7 +24,7 @@ const InventoriesList = (): JSX.Element => {
                         }}
                     />
                 )}
-                keyExtractor={item => item.id.toString()}
+                keyExtractor={(item: Inventory) => item.id.toString()}
                 contentContainerStyle={inventoriesListStyles.inventoriesContainer}
             />
 

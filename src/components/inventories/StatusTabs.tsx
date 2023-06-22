@@ -1,9 +1,11 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import { Text, View, Pressable, Animated, StyleSheet } from 'react-native'
 import colors from '../../constants/colors'
 import { SCREEN_WIDTH } from '../../constants/dimensions'
 import { FONT_SIZE_14 } from '../../constants/fontsSizes'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
+import { useAppDispatch } from '../../state/store'
+import { getInventoriesByStatus } from '../../state/features/InventorySlice'
 
 const StatusTabs = (): JSX.Element => {
     const [activeTab, setActiveTab] = useState(0)
@@ -18,6 +20,24 @@ const StatusTabs = (): JSX.Element => {
             useNativeDriver: true
         }).start()
     }
+
+    const dispatch = useAppDispatch()
+
+    useEffect(() => {
+        switch (activeTab) {
+            case 0:
+                dispatch(getInventoriesByStatus(0))
+                break
+            case 1:
+                dispatch(getInventoriesByStatus(1))
+                break
+            case 2:
+                dispatch(getInventoriesByStatus(2))
+                break
+            default:
+                break
+        }
+    }, [activeTab, dispatch])
 
     return (
         <>
