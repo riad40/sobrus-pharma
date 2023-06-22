@@ -20,6 +20,7 @@ const getInventories = async () => {
         const inventories: Inventory[] = []
         querySnapshot.forEach(doc => {
             inventories.push(doc.data() as Inventory)
+            inventories[inventories.length - 1].id = inventories.length
         })
         return inventories
     } catch (e) {
@@ -31,6 +32,7 @@ const getInventories = async () => {
 const getInventoryById = async (id: number) => {
     try {
         const docRef = doc(db, 'inventories', id.toString())
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const docSnap = await getDocs(docRef as any)
         return docSnap.docs.map(doc => doc.data() as Inventory)
     } catch (e) {
@@ -58,6 +60,7 @@ const getInventoriesByStatus = async (status: string) => {
 const updateInventoryStatusById = async (id: number, status: string) => {
     try {
         const docRef = doc(db, 'inventories', id.toString())
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const docSnap = await getDocs(docRef as any)
         const inventory = docSnap.docs.map(doc => doc.data() as Inventory)[0]
         inventory.status = status
