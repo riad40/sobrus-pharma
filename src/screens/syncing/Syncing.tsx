@@ -4,9 +4,9 @@ import { NavBar, ProgressBar } from '../../components'
 import syncingStyles from './syncing.styels'
 import { useNavigation, NavigationProp } from '@react-navigation/native'
 import RootStackParamsList from '../../navigations/RootStackParamsList'
-import fetchProducts from '../../helpers/fetchProducts'
 import { saveItem, removeItem } from '../../helpers/AsyncStorage'
 import { Product } from '../../@types'
+import { getProducts } from '../../controllers/ProductsController'
 
 const Syncing = (): JSX.Element => {
     const navigation = useNavigation<NavigationProp<RootStackParamsList>>()
@@ -18,9 +18,9 @@ const Syncing = (): JSX.Element => {
             await removeItem('Products')
 
             try {
-                const products = await fetchProducts()
+                const products: Product[] = (await getProducts()) || []
 
-                const totalProducts = products.length
+                const totalProducts: number = products.length
                 let syncedProducts = 0
 
                 await saveItem<Product[]>(`Products`, products)
@@ -31,7 +31,7 @@ const Syncing = (): JSX.Element => {
                     setProgress((syncedProducts / totalProducts) * 100)
                 })
 
-                syncedProducts === totalProducts.length && syncedProducts < 100 && setProgress(100)
+                syncedProducts === totalProducts && syncedProducts < 100 && setProgress(100)
 
                 setTimeout(() => {
                     navigation.navigate('BottomTabs')
