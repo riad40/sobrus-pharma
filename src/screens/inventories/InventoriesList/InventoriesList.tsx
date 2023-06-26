@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
     ScreenContainer,
     StatusTabs,
@@ -14,7 +14,7 @@ import { useAppSelector, RootState } from '../../../state/store'
 const InventoriesList = (): JSX.Element => {
     const { inventories }: { inventories: Array<Inventory> } = useAppSelector((state: RootState) => state.inventories)
 
-    const [modalVisible, setModalVisible] = React.useState(false)
+    const [modalVisible, setModalVisible] = useState(false)
 
     const toggleModal = () => {
         setModalVisible(!modalVisible)
