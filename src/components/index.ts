@@ -12,6 +12,9 @@ import CustomTextInput from './common/CustomTextInput'
 import CustomInputContainer from './common/CustomInputContainer'
 import CustomSelectModal from './common/CustomSelectModal'
 import DatePicker from './inventories/DatePicker'
+import CreateProductModal from './scanning/CreateProductModal'
+import SuccessAlert from './scanning/SuccessAlert'
+import BottomContent from './scanning/BottomContent'
 
 export {
     NavBar,
@@ -27,5 +30,8 @@ export {
     CustomTextInput,
     CustomInputContainer,
     CustomSelectModal,
-    DatePicker
+    DatePicker,
+    CreateProductModal,
+    SuccessAlert,
+    BottomContent
 }
