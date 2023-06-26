@@ -1,12 +1,7 @@
 import React from 'react'
-import { View, Text } from 'react-native'
-
+import { ComingSoon } from '../../components'
 const Offers = (): JSX.Element => {
-    return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <Text>Offers Screen</Text>
-        </View>
-    )
+    return <ComingSoon />
 }
 
 export default Offers

@@ -1,7 +1,8 @@
 import React from 'react'
 import { Text, View, StyleSheet, Dimensions } from 'react-native'
-import AntDesign from 'react-native-vector-icons/Ionicons'
+import Ionicons from 'react-native-vector-icons/Ionicons'
 import colors from '../../constants/colors'
+import { tabInfos } from '../../constants/tabInfos'
 
 type TabViewProps = {
     focused: boolean
@@ -10,32 +11,16 @@ type TabViewProps = {
 }
 
 const TabView = ({ focused, label, key }: TabViewProps): JSX.Element => {
-    const icons: { [key: string]: string } = {
-        HomeStack: 'home-outline',
-        InventoriesStack: 'albums-outline',
-        OffersStack: 'pricetags-outline',
-        MenuStack: 'menu-outline',
-        CommandsStack: 'cart-outline'
-    }
+    const iconName = tabInfos[label].iconName
 
-    const iconName = icons[label]
-
-    const labels: { [key: string]: string } = {
-        HomeStack: 'Acceuil',
-        InventoriesStack: 'Inventaires',
-        OffersStack: 'Offres',
-        MenuStack: 'Menu',
-        CommandsStack: 'Commands'
-    }
-
-    label = labels[label]
+    label = tabInfos[label].label
 
     return (
         <>
             <View style={tabViewStyels.container} key={key}>
-                <AntDesign
+                <Ionicons
                     name={iconName}
-                    size={30}
+                    size={25}
                     color={focused ? colors.primary : colors.secondary}
                     style={{ color: focused ? colors.primary : colors.secondary }}
                 />
@@ -50,12 +35,15 @@ const TabView = ({ focused, label, key }: TabViewProps): JSX.Element => {
 const tabViewStyels = StyleSheet.create({
     container: {
         alignItems: 'center',
-        width: Dimensions.get('window').width / 5
+        width: Dimensions.get('window').width / 5,
+        marginTop: 5
     },
     label: {
-        fontSize: 14,
         color: colors.secondary,
-        fontWeight: '700'
+        textTransform: 'uppercase',
+        fontFamily: 'Poppins-SemiBold',
+        fontSize: 11,
+        textAlign: 'center'
     }
 })
 
