@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit'
-import { getInventories } from '../../controllers/InventoriesController'
+import { getInventories, getInventoriesByStatus } from '../../controllers/InventoriesController'
 import { Inventory } from '../../@types'
 
 interface InitialState {
@@ -13,34 +13,23 @@ const inventoriesState: InitialState = {
     loading: false,
     error: null
 }
-
-const getInventoriesByStatus = createAsyncThunk<Inventory[], number>('inventories/all', async (status: number) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const getAllInventories = createAsyncThunk<Inventory[] | any>('inventories/all', async () => {
     try {
-        // Fetch the inventories from firebase
-        const data = await getInventories()
-        const inventories: Inventory[] = data as Inventory[]
-
-        // Apply the filtering based on the status
-        let filteredInventories: Inventory[] = []
-
-        switch (status) {
-            case 0:
-                filteredInventories = inventories
-                break
-            case 1:
-                filteredInventories = inventories.filter(inventory => inventory.status === 'fermé')
-                break
-            case 2:
-                filteredInventories = inventories.filter(inventory => inventory.status === 'ouvert')
-                break
-            default:
-                filteredInventories = inventories
-                break
-        }
-
-        return filteredInventories
+        const inventories = await getInventories()
+        return inventories
     } catch (error) {
-        throw new Error('Failed to get inventories by status')
+        console.log(error)
+    }
+})
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const getInventoriesByTheirStatus = createAsyncThunk<Inventory[] | any, string>('inventories/status', async status => {
+    try {
+        const inventories = await getInventoriesByStatus(status)
+        return inventories
+    } catch (error) {
+        console.log(error)
     }
 })
 
@@ -49,23 +38,45 @@ const inventorySlice = createSlice({
     initialState: inventoriesState,
     reducers: {},
     extraReducers: builder => {
-        builder.addCase(getInventoriesByStatus.pending, (state: InitialState) => {
+        builder.addCase(getAllInventories.pending, (state: InitialState) => {
             state.loading = true
             state.error = null
         })
-        builder.addCase(getInventoriesByStatus.fulfilled, (state: InitialState, action: PayloadAction<Inventory[]>) => {
+        builder.addCase(getAllInventories.fulfilled, (state: InitialState, action: PayloadAction<Inventory[]>) => {
             state.loading = false
             state.error = null
-            state.inventories = action.payload.map(inventory => inventory)
+            state.inventories = action.payload
         })
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        builder.addCase(getInventoriesByStatus.rejected, (state: InitialState, action: PayloadAction<string | any>) => {
+        builder.addCase(getAllInventories.rejected, (state: InitialState, action: PayloadAction<string | any>) => {
             state.loading = false
             state.error = action.payload || 'Failed to get inventories by status'
         })
+
+        // get inventories by status
+        builder.addCase(getInventoriesByTheirStatus.pending, (state: InitialState) => {
+            state.loading = true
+            state.error = null
+        })
+        builder.addCase(
+            getInventoriesByTheirStatus.fulfilled,
+            (state: InitialState, action: PayloadAction<Inventory[]>) => {
+                state.loading = false
+                state.error = null
+                state.inventories = action.payload
+            }
+        )
+        builder.addCase(
+            getInventoriesByTheirStatus.rejected,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (state: InitialState, action: PayloadAction<string | any>) => {
+                state.loading = false
+                state.error = action.payload || 'Failed to get inventories by status'
+            }
+        )
     }
 })
 
-export { getInventoriesByStatus }
+export { getAllInventories, getInventoriesByTheirStatus }
 
 export default inventorySlice.reducer
