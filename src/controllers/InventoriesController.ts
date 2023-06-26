@@ -48,6 +48,7 @@ const getInventoriesByStatus = async (status: string) => {
         querySnapshot.forEach(doc => {
             if (doc.data().status === status) {
                 inventories.push(doc.data() as Inventory)
+                inventories[inventories.length - 1].id = inventories.length
             }
         })
         return inventories
