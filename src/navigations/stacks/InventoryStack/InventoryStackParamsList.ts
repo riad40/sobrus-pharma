@@ -4,7 +4,6 @@ import { RouteProp } from '@react-navigation/native'
 type InventoryStackParamsList = {
     InventoriesList: undefined
     InventoryDetails: { inventoryId: string }
-    ScaningScreen: { inventoryId: string }
 }
 
 type InventoriesListScreenNavigationProp = StackNavigationProp<InventoryStackParamsList, 'InventoriesList'>
@@ -15,10 +14,6 @@ type InventoryDetailsScreenNavigationProp = StackNavigationProp<InventoryStackPa
 
 type InventoryDetailsScreenRouteProp = RouteProp<InventoryStackParamsList, 'InventoryDetails'>
 
-type ScaningScreenNavigationProp = StackNavigationProp<InventoryStackParamsList, 'ScaningScreen'>
-
-type ScaningScreenRouteProp = RouteProp<InventoryStackParamsList, 'ScaningScreen'>
-
 export type InventoriesListProps = {
     navigation: InventoriesListScreenNavigationProp
     route: InventoriesListScreenRouteProp
@@ -27,11 +22,6 @@ export type InventoriesListProps = {
 export type InventoryDetailsProps = {
     navigation: InventoryDetailsScreenNavigationProp
     route: InventoryDetailsScreenRouteProp
-}
-
-export type ScaningScreenProps = {
-    navigation: ScaningScreenNavigationProp
-    route: ScaningScreenRouteProp
 }
 
 export default InventoryStackParamsList

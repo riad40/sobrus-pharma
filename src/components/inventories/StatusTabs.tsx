@@ -1,13 +1,21 @@
 import React, { useRef, useState, useEffect } from 'react'
 import { Text, View, Pressable, Animated, StyleSheet } from 'react-native'
+
 import colors from '../../constants/colors'
 import { SCREEN_WIDTH } from '../../constants/dimensions'
 import { FONT_SIZE_14 } from '../../constants/fontsSizes'
+
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
+
 import { useAppDispatch } from '../../state/store'
-import { getInventoriesByStatus } from '../../state/features/InventorySlice'
+import { getAllInventories, getInventoriesByTheirStatus } from '../../state/features/InventorySlice'
+
+import { useNavigation, NavigationProp } from '@react-navigation/native'
+import InventoryStackParamsList from '../../navigations/stacks/InventoryStack/InventoryStackParamsList'
 
 const StatusTabs = (): JSX.Element => {
+    const navigation = useNavigation<NavigationProp<InventoryStackParamsList>>()
+
     const [activeTab, setActiveTab] = useState(0)
     const tabPosition = useRef(new Animated.Value(0)).current
 
@@ -24,15 +32,23 @@ const StatusTabs = (): JSX.Element => {
     const dispatch = useAppDispatch()
 
     useEffect(() => {
+        const unscribe = navigation.addListener('focus', () => {
+            dispatch(getAllInventories())
+        })
+
+        return unscribe
+    }, [dispatch])
+
+    useEffect(() => {
         switch (activeTab) {
             case 0:
-                dispatch(getInventoriesByStatus(0))
+                dispatch(getAllInventories())
                 break
             case 1:
-                dispatch(getInventoriesByStatus(1))
+                dispatch(getInventoriesByTheirStatus('fermé'))
                 break
             case 2:
-                dispatch(getInventoriesByStatus(2))
+                dispatch(getInventoriesByTheirStatus('ouvert'))
                 break
             default:
                 break

@@ -1,57 +1,69 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { View, Text, StyleSheet, Pressable } from 'react-native'
 import colors from '../../constants/colors'
 import { FONT_SIZE_14, FONT_SIZE_18 } from '../../constants/fontsSizes'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import Modal from 'react-native-modal'
-import { CustomInputContainer, CustomSelectModal, Button, DatePicker } from '../'
 import Ionicons from 'react-native-vector-icons/Ionicons'
-import { useNavigation, NavigationProp } from '@react-navigation/native'
-import RootStackParamsList from '../../navigations/RootStackParamsList'
+import { CustomInputContainer, Button, CustomTextInput } from '..'
 
-interface CreateInventoryModalProps {
+interface CreateProductModalProps {
     visible: boolean
     onClose: () => void
+    codeBar: string
+    productName?: string
+    onSave: () => void
+    onProductChange: (value: string, type: string) => void
+    onQuantityChange: (value: number) => void
 }
 
-const options = ['Inventaire annuel', 'Inventaire tournant', 'Inventaire exceptionnel', 'Inventaire de contrôle']
-
-const CreateInventoryModal = ({ visible, onClose }: CreateInventoryModalProps): JSX.Element => {
-    const navigation = useNavigation<NavigationProp<RootStackParamsList>>()
-
-    const [date, setDate] = useState<string>('')
-    const [reason, setReason] = useState<string>('')
-
+const CreateProductModal = ({
+    visible,
+    onClose,
+    codeBar,
+    productName,
+    onSave,
+    onProductChange,
+    onQuantityChange
+}: CreateProductModalProps): JSX.Element => {
     return (
         <Modal isVisible={visible} onBackdropPress={onClose} style={styles.modal} backdropOpacity={0.5}>
             <View style={styles.modalContainer}>
                 <Pressable onPress={onClose}>
                     <View style={styles.closeModalLine} />
                 </Pressable>
-                <Text style={styles.modalTitle}>Nouvel inventaire</Text>
+                <Text style={styles.modalTitle}>Ajouter un produit</Text>
 
                 <View style={styles.inputContainer}>
                     <CustomInputContainer
-                        label="Date"
-                        icon="calendar-outline"
+                        label="Code Bar"
                         element={
-                            <DatePicker
-                                setDate={value => {
-                                    setDate(value)
-                                }}
+                            <CustomTextInput
+                                placeholder="Code Bar"
+                                value={codeBar}
+                                onChangeText={value => console.log(value)}
+                                editable={false}
                             />
                         }
                     />
                     <CustomInputContainer
-                        label="Raison"
-                        icon="chevron-down-outline"
+                        label="Nom du produit"
                         element={
-                            <CustomSelectModal
-                                options={options}
-                                initialOption={options[0]}
-                                onSelect={value => {
-                                    setReason(value)
-                                }}
+                            <CustomTextInput
+                                placeholder="Nom du produit"
+                                value={productName || ''}
+                                onChangeText={value => onProductChange(value, 'productName')}
+                                editable={productName === undefined ? true : false}
+                            />
+                        }
+                    />
+
+                    <CustomInputContainer
+                        label="Quantité"
+                        element={
+                            <CustomTextInput
+                                placeholder="Quantité"
+                                onChangeText={value => onQuantityChange(parseInt(value))}
                             />
                         }
                     />
@@ -64,13 +76,8 @@ const CreateInventoryModal = ({ visible, onClose }: CreateInventoryModalProps): 
                     <Button
                         text="Sauvegarder"
                         onPress={() => {
+                            onSave()
                             onClose()
-                            navigation.navigate('ScanningScreen', {
-                                data: {
-                                    date: date,
-                                    reason: reason
-                                }
-                            })
                         }}
                     />
                 </View>
@@ -148,4 +155,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default CreateInventoryModal
+export default CreateProductModal

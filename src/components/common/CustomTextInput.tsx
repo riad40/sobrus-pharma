@@ -3,7 +3,7 @@ import { StyleSheet, TextInput } from 'react-native'
 import { FONT_SIZE_14 } from '../../constants/fontsSizes'
 
 interface CustomTextInputProps {
-    value: string
+    value?: string
     placeholder: string
     editable?: boolean
     onChangeText: (text: string) => void
