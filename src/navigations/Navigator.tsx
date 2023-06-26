@@ -1,4 +1,4 @@
-import { ToConnect, Syncing } from '../screens'
+import { ToConnect, Syncing, ScaningScreen } from '../screens'
 import React from 'react'
 import BottomTabs from './BottomTabsStack/BottomTabs'
 import { createStackNavigator } from '@react-navigation/stack'
@@ -14,6 +14,7 @@ const Navigator = (): JSX.Element => {
         >
             <RootStack.Screen name="ToConnect" component={ToConnect} />
             <RootStack.Screen name="Syncing" component={Syncing} />
+            <RootStack.Screen name="ScanningScreen" component={ScaningScreen} />
             <RootStack.Screen name="BottomTabs" component={BottomTabs} />
         </RootStack.Navigator>
     )

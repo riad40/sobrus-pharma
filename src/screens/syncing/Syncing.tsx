@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import { View, Text, SafeAreaView, ScrollView, Image } from 'react-native'
+
 import { NavBar, ProgressBar } from '../../components'
+
 import syncingStyles from './syncing.styels'
+
 import { useNavigation, NavigationProp } from '@react-navigation/native'
 import RootStackParamsList from '../../navigations/RootStackParamsList'
+
 import { saveItem, removeItem } from '../../helpers/AsyncStorage'
-import { Product } from '../../@types'
 import { getProducts } from '../../controllers/ProductsController'
+
+import { Product } from '../../@types'
 
 const Syncing = (): JSX.Element => {
     const navigation = useNavigation<NavigationProp<RootStackParamsList>>()
@@ -20,18 +25,9 @@ const Syncing = (): JSX.Element => {
             try {
                 const products: Product[] = (await getProducts()) || []
 
-                const totalProducts: number = products.length
-                let syncedProducts = 0
-
                 await saveItem<Product[]>(`Products`, products)
 
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                products.forEach((_product: Product) => {
-                    syncedProducts += 1
-                    setProgress((syncedProducts / totalProducts) * 100)
-                })
-
-                syncedProducts === totalProducts && syncedProducts < 100 && setProgress(100)
+                setProgress(100)
 
                 setTimeout(() => {
                     navigation.navigate('BottomTabs')
