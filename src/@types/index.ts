@@ -10,7 +10,7 @@ type Product = {
 
 type Inventory = {
     id: number
-    products: number[]
+    products: { codeBar?: string; productName?: string; quantity?: number }[]
     reason: string
     status: string
     date: string
