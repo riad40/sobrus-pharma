@@ -1,7 +1,10 @@
-import { SCREEN_WIDTH, SCREEN_HEIGHT } from '../../../constants/dimensions'
 import { StyleSheet } from 'react-native'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
+
 import colors from '../../../constants/colors'
+import { SCREEN_WIDTH, SCREEN_HEIGHT } from '../../../constants/dimensions'
+
+import { FONT_SIZE_14 } from '../../../constants/fontsSizes'
 
 const scanningStyles = StyleSheet.create({
     container: {
@@ -30,23 +33,7 @@ const scanningStyles = StyleSheet.create({
         borderRadius: wp(20),
         paddingHorizontal: wp(5),
         paddingVertical: hp(1),
-        fontFamily: 'Poppins-Regular',
-        height: hp(5)
-    },
-    topContentText: {
-        color: '#FFF',
-        marginHorizontal: wp(5),
-        fontFamily: 'Poppins-Regular',
-        textTransform: 'capitalize',
-        textAlign: 'center'
-    },
-    customMarker: {
-        width: wp(60),
-        height: hp(15),
-        backgroundColor: 'lightgray',
-        borderColor: 'white',
-        opacity: 0.3,
-        borderRadius: wp(2)
+        fontFamily: 'Poppins-Regular'
     },
     bottomContent: {
         justifyContent: 'space-between',
@@ -66,12 +53,22 @@ const scanningStyles = StyleSheet.create({
         backgroundColor: '#707070',
         borderRadius: wp(20)
     },
-
     bottomContentText: {
         color: '#FFF',
         marginHorizontal: wp(1),
         fontFamily: 'Poppins-Regular',
         textTransform: 'capitalize'
+    },
+    offContainer: {
+        width: '100%',
+        height: '100%',
+        backgroundColor: '#000000',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    text: {
+        fontSize: FONT_SIZE_14,
+        color: 'white'
     }
 })
 

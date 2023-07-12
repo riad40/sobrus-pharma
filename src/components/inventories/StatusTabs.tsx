@@ -7,14 +7,18 @@ import { FONT_SIZE_14 } from '../../constants/fontsSizes'
 
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 
+import { getInventories } from '../../controllers/InventoriesController'
+
 import { useAppDispatch } from '../../state/store'
-import { getAllInventories, getInventoriesByTheirStatus } from '../../state/features/InventorySlice'
+import { saveInventories } from '../../state/features/InventorySlice'
+
+import filterInventories from '../../helpers/filterInventories'
 
 import { useNavigation, NavigationProp } from '@react-navigation/native'
 import InventoryStackParamsList from '../../navigations/stacks/InventoryStack/InventoryStackParamsList'
 
 const StatusTabs = (): JSX.Element => {
-    const navigation = useNavigation<NavigationProp<InventoryStackParamsList>>()
+    const navigation = useNavigation<NavigationProp<InventoryStackParamsList, 'InventoriesList'>>()
 
     const [activeTab, setActiveTab] = useState(0)
     const tabPosition = useRef(new Animated.Value(0)).current
@@ -24,7 +28,7 @@ const StatusTabs = (): JSX.Element => {
 
         Animated.timing(tabPosition, {
             toValue: (SCREEN_WIDTH / 3) * tabIndex,
-            duration: 300,
+            duration: 200,
             useNativeDriver: true
         }).start()
     }
@@ -32,28 +36,26 @@ const StatusTabs = (): JSX.Element => {
     const dispatch = useAppDispatch()
 
     useEffect(() => {
-        const unscribe = navigation.addListener('focus', () => {
-            dispatch(getAllInventories())
+        navigation.addListener('focus', () => {
+            dispatch(saveInventories(getInventories()))
         })
-
-        return unscribe
     }, [dispatch])
 
     useEffect(() => {
         switch (activeTab) {
             case 0:
-                dispatch(getAllInventories())
+                dispatch(saveInventories(getInventories()))
                 break
             case 1:
-                dispatch(getInventoriesByTheirStatus('fermé'))
+                dispatch(saveInventories(filterInventories(getInventories(), 'férmé')))
                 break
             case 2:
-                dispatch(getInventoriesByTheirStatus('ouvert'))
+                dispatch(saveInventories(filterInventories(getInventories(), 'ouvert')))
                 break
             default:
                 break
         }
-    }, [activeTab, dispatch])
+    }, [activeTab])
 
     return (
         <>

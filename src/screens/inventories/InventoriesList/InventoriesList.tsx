@@ -1,4 +1,7 @@
 import React, { useState } from 'react'
+import { SafeAreaView, FlatList } from 'react-native'
+
+import inventoriesListStyles from './InventoriesList.styles'
 import {
     ScreenContainer,
     StatusTabs,
@@ -6,13 +9,15 @@ import {
     CreateInventoryButton,
     CreateInventoryModal
 } from '../../../components'
-import { SafeAreaView, FlatList } from 'react-native'
-import inventoriesListStyles from './InventoriesList.styles'
+
 import { Inventory } from '../../../@types'
 import { useAppSelector, RootState } from '../../../state/store'
 
+import { useNavigation, NavigationProp } from '@react-navigation/native'
+import InventoryStackParamsList from '../../../navigations/stacks/InventoryStack/InventoryStackParamsList'
+
 const InventoriesList = (): JSX.Element => {
-    const { inventories }: { inventories: Array<Inventory> } = useAppSelector((state: RootState) => state.inventories)
+    const { inventories } = useAppSelector((state: RootState) => state.inventories)
 
     const [modalVisible, setModalVisible] = useState(false)
 
@@ -20,9 +25,11 @@ const InventoriesList = (): JSX.Element => {
         setModalVisible(!modalVisible)
     }
 
+    const navigation = useNavigation<NavigationProp<InventoryStackParamsList>>()
+
     return (
         <SafeAreaView style={{ flex: 1 }}>
-            <ScreenContainer title="Inventaires" icon={true}>
+            <ScreenContainer title="Inventaires" icon={false}>
                 <StatusTabs />
             </ScreenContainer>
 
@@ -32,11 +39,11 @@ const InventoriesList = (): JSX.Element => {
                     <InventoryCard
                         inventory={item}
                         onPress={() => {
-                            console.log('hello')
+                            navigation.navigate('InventoryDetails', { inventoryId: item.id })
                         }}
                     />
                 )}
-                keyExtractor={(item: Inventory) => item.id.toString()}
+                keyExtractor={(item: Inventory) => item.id?.toString()}
                 contentContainerStyle={inventoriesListStyles.inventoriesContainer}
             />
 

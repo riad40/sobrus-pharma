@@ -3,6 +3,7 @@ import { StyleSheet, Text, TouchableOpacity } from 'react-native'
 import { FONT_SIZE_14 } from '../../constants/fontsSizes'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker'
+import dateFormatter from '../../helpers/dateFormatter'
 
 interface DatePickerProps {
     setDate: (date: string) => void
@@ -13,37 +14,18 @@ const DatePicker = ({ setDate }: DatePickerProps): JSX.Element => {
 
     const date = new Date()
 
-    let formattedDateAndTime =
-        date.getDate() +
-        '-' +
-        (date.getMonth() + 1) +
-        '-' +
-        date.getFullYear() +
-        ' ' +
-        date.getHours() +
-        ':' +
-        date.getMinutes()
+    let formattedDate = dateFormatter(date)
 
-    const [selectedDate, setSelectedDate] = useState<string>(formattedDateAndTime)
+    const [selectedDate, setSelectedDate] = useState<string>(formattedDate)
 
     const handleDateChange = (event: DateTimePickerEvent, selectedDate?: Date): void => {
         const currentDate = selectedDate
 
-        formattedDateAndTime = currentDate
-            ? currentDate.getDate() +
-              '-' +
-              (currentDate.getMonth() + 1) +
-              '-' +
-              currentDate.getFullYear() +
-              ' ' +
-              currentDate.getHours() +
-              ':' +
-              currentDate.getMinutes()
-            : formattedDateAndTime
+        formattedDate = currentDate ? dateFormatter(currentDate) : formattedDate
 
         setShow(false)
-        setDate(formattedDateAndTime)
-        setSelectedDate(formattedDateAndTime)
+        setDate(formattedDate)
+        setSelectedDate(formattedDate)
     }
 
     return (

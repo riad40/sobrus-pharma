@@ -9,17 +9,26 @@ interface CustomInputContainerProps {
     label?: string
     element: React.ReactNode
     icon?: string
+    validationError?: string
 }
 
-const CustomInputContainer = ({ label, element, icon }: CustomInputContainerProps): JSX.Element => {
+const CustomInputContainer = ({ label, element, icon, validationError }: CustomInputContainerProps): JSX.Element => {
     return (
         <>
             {label && <Text style={styles.inputLabel}>{label}</Text>}
-            <View style={styles.inputContainer}>
+            <View
+                style={[
+                    styles.inputContainer,
+                    {
+                        borderColor: validationError ? 'red' : 'lightgrey'
+                    }
+                ]}
+            >
                 {element}
 
                 {icon && <Ionicons name={icon} size={hp(3)} color={colors.secondary} />}
             </View>
+            {validationError && <Text style={{ color: 'red', fontSize: FONT_SIZE_14 }}>{validationError}</Text>}
         </>
     )
 }

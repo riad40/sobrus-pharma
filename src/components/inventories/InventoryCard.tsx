@@ -1,10 +1,16 @@
 import React from 'react'
 import { Text, View, Pressable, StyleSheet } from 'react-native'
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
-import { Inventory } from '../../@types'
+
 import Ionicons from 'react-native-vector-icons/Ionicons'
-import { FONT_SIZE_14, FONT_SIZE_12 } from '../../constants/fontsSizes'
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
+
 import colors from '../../constants/colors'
+import { FONT_SIZE_14, FONT_SIZE_12 } from '../../constants/fontsSizes'
+
+import { useNavigation, NavigationProp } from '@react-navigation/native'
+import RootStackParamsList from '../../navigations/RootStackParamsList'
+
+import { Inventory } from '../../@types'
 
 interface InventoryCardProps {
     inventory: Inventory
@@ -12,9 +18,13 @@ interface InventoryCardProps {
 }
 
 const InventoryCard = ({ inventory, onPress }: InventoryCardProps): JSX.Element => {
-    const disabled = inventory.status === 'fermé' ? true : false
+    const disabled = inventory.status === 'férmé' ? true : false
+
+    const navigation = useNavigation<NavigationProp<RootStackParamsList, 'ScanningScreen'>>()
 
     const { status } = inventory
+
+    const idFormatted = inventory.id < 10 ? `0${inventory.id}` : inventory.id
 
     return (
         <>
@@ -23,7 +33,7 @@ const InventoryCard = ({ inventory, onPress }: InventoryCardProps): JSX.Element 
                     <View style={styles.cardLeft}>
                         <View style={styles.cardLeftTop}>
                             <Text style={styles.cardLeftTopTitle}>{inventory.reason}</Text>
-                            <Text style={styles.cardLeftTopId}>-0{inventory.id}</Text>
+                            <Text style={styles.cardLeftTopId}>-{idFormatted}</Text>
                         </View>
                         <View style={styles.cardLeftBottom}>
                             <View style={styles.bottomLeftContainer}>
@@ -49,6 +59,7 @@ const InventoryCard = ({ inventory, onPress }: InventoryCardProps): JSX.Element 
                         </View>
                     </View>
                     <Pressable
+                        onPress={() => navigation.navigate('ScanningScreen', { id: inventory.id })}
                         style={[
                             styles.cardRight,
                             {

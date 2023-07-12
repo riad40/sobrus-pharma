@@ -1,0 +1,8 @@
+input date => only date 
+add product to inventory Modal =>  onKeyBoard open canter vertically
+add inventory even if there's no product 
+// product can't be repeated
+// scan is done disactvate the camera
+// modal close should be draggabel
+// filter inventories to be locally
+// stack state clearing using navigation.reset()

@@ -1,17 +1,22 @@
 import React from 'react'
 import { View, Text, StyleSheet, Pressable } from 'react-native'
+
+import Modal from 'react-native-modal'
+
 import colors from '../../constants/colors'
 import { FONT_SIZE_14, FONT_SIZE_18 } from '../../constants/fontsSizes'
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
-import Modal from 'react-native-modal'
+
 import Ionicons from 'react-native-vector-icons/Ionicons'
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
+
 import { CustomInputContainer, Button, CustomTextInput } from '..'
 
 interface CreateProductModalProps {
     visible: boolean
     onClose: () => void
     codeBar: string
-    productName?: string
+    name?: string
+    quantity?: number
     onSave: () => void
     onProductChange: (value: string, type: string) => void
     onQuantityChange: (value: number) => void
@@ -21,7 +26,7 @@ const CreateProductModal = ({
     visible,
     onClose,
     codeBar,
-    productName,
+    name,
     onSave,
     onProductChange,
     onQuantityChange
@@ -41,7 +46,7 @@ const CreateProductModal = ({
                             <CustomTextInput
                                 placeholder="Code Bar"
                                 value={codeBar}
-                                onChangeText={value => console.log(value)}
+                                onChangeText={value => value}
                                 editable={false}
                             />
                         }
@@ -51,9 +56,9 @@ const CreateProductModal = ({
                         element={
                             <CustomTextInput
                                 placeholder="Nom du produit"
-                                value={productName || ''}
-                                onChangeText={value => onProductChange(value, 'productName')}
-                                editable={productName === undefined ? true : false}
+                                value={name || ''}
+                                onChangeText={value => onProductChange(value, 'name')}
+                                editable={true}
                             />
                         }
                     />
@@ -64,6 +69,7 @@ const CreateProductModal = ({
                             <CustomTextInput
                                 placeholder="Quantité"
                                 onChangeText={value => onQuantityChange(parseInt(value))}
+                                keyBoardType="numeric"
                             />
                         }
                     />
@@ -73,13 +79,7 @@ const CreateProductModal = ({
                     <View style={styles.iconContainer}>
                         <Ionicons name="chevron-back-outline" size={24} color={colors.primary} />
                     </View>
-                    <Button
-                        text="Sauvegarder"
-                        onPress={() => {
-                            onSave()
-                            onClose()
-                        }}
-                    />
+                    <Button text="Sauvegarder" onPress={onSave} />
                 </View>
             </View>
         </Modal>

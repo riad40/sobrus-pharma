@@ -1,16 +1,18 @@
-import { doc, setDoc, getDocs, collection } from 'firebase/firestore'
+import { getDocs, collection } from 'firebase/firestore'
 import { db } from '../configs/firebase'
 import { Product } from '../@types'
+import realm from '../configs/realm'
 
 // Create a new product
-const createProduct = async (product: Product) => {
-    try {
-        const docRef = doc(db, 'products', product.id.toString())
-        const docSnap = await setDoc(docRef, product)
-        console.log('Document written with ID: ', docSnap)
-    } catch (e) {
-        console.error(e)
-    }
+const createUnknownProducts = (product: Product) => {
+    realm.write(() => {
+        realm.create<Product>('Product', {
+            id: product.id,
+            name: product.name,
+            codeBar: product.codeBar,
+            status: product.status
+        })
+    })
 }
 
 // get all products
@@ -27,4 +29,4 @@ const getProducts = async () => {
     }
 }
 
-export { createProduct, getProducts }
+export { createUnknownProducts, getProducts }

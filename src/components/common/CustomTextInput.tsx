@@ -1,4 +1,5 @@
 import React from 'react'
+import { KeyboardTypeOptions } from 'react-native'
 import { StyleSheet, TextInput } from 'react-native'
 import { FONT_SIZE_14 } from '../../constants/fontsSizes'
 
@@ -7,9 +8,16 @@ interface CustomTextInputProps {
     placeholder: string
     editable?: boolean
     onChangeText: (text: string) => void
+    keyBoardType?: KeyboardTypeOptions
 }
 
-const CustomTextInput = ({ value, placeholder, editable, onChangeText }: CustomTextInputProps): JSX.Element => {
+const CustomTextInput = ({
+    value,
+    placeholder,
+    editable,
+    onChangeText,
+    keyBoardType
+}: CustomTextInputProps): JSX.Element => {
     return (
         <>
             <TextInput
@@ -18,6 +26,8 @@ const CustomTextInput = ({ value, placeholder, editable, onChangeText }: CustomT
                 value={value}
                 onChangeText={onChangeText}
                 editable={editable}
+                keyboardType={keyBoardType}
+                returnKeyType={'none'}
             />
         </>
     )
