@@ -9,17 +9,26 @@ interface CustomInputContainerProps {
     label?: string
     element: React.ReactNode
     icon?: string
+    error?: string
 }
 
-const CustomInputContainer = ({ label, element, icon }: CustomInputContainerProps): JSX.Element => {
+const CustomInputContainer = ({ label, element, icon, error }: CustomInputContainerProps): JSX.Element => {
     return (
         <>
             {label && <Text style={styles.inputLabel}>{label}</Text>}
-            <View style={styles.inputContainer}>
+            <View
+                style={[
+                    styles.inputContainer,
+                    {
+                        borderColor: error ? 'red' : 'lightgrey'
+                    }
+                ]}
+            >
                 {element}
 
                 {icon && <Ionicons name={icon} size={hp(3)} color={colors.secondary} />}
             </View>
+            {error && <Text style={{ color: 'red', fontSize: FONT_SIZE_14 }}>{error}</Text>}
         </>
     )
 }
@@ -36,7 +45,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginBottom: hp(2)
+        marginBottom: hp(1.5)
     },
     inputLabel: {
         fontSize: FONT_SIZE_14,

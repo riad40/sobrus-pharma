@@ -1,34 +1,77 @@
-import React from 'react'
-import { View, Text, StyleSheet, Pressable } from 'react-native'
+import React, { useState, useEffect, memo } from 'react'
+import { View, Text, StyleSheet, Pressable, Keyboard, ViewStyle } from 'react-native'
+
+import Modal from 'react-native-modal'
+
 import colors from '../../constants/colors'
 import { FONT_SIZE_14, FONT_SIZE_18 } from '../../constants/fontsSizes'
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
-import Modal from 'react-native-modal'
+
 import Ionicons from 'react-native-vector-icons/Ionicons'
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
+
 import { CustomInputContainer, Button, CustomTextInput } from '..'
 
 interface CreateProductModalProps {
     visible: boolean
     onClose: () => void
     codeBar: string
-    productName?: string
+    name?: string
+    quantity?: number
     onSave: () => void
     onProductChange: (value: string, type: string) => void
     onQuantityChange: (value: number) => void
+    error?: { name: string; quantity: string }
 }
 
 const CreateProductModal = ({
     visible,
     onClose,
     codeBar,
-    productName,
+    name,
     onSave,
     onProductChange,
-    onQuantityChange
+    onQuantityChange,
+    error
 }: CreateProductModalProps): JSX.Element => {
+    const [keyboardShown, setKeyboardShown] = useState(false)
+    const [keyboardType, setKeyboardType] = useState<string>('')
+    // const [keyboardHeight, setKeyboardHeight] = useState<number>(0)
+
+    useEffect(() => {
+        const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
+            // setKeyboardHeight(e.endCoordinates.height)
+            setKeyboardShown(true)
+        })
+
+        const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+            // setKeyboardHeight(0)
+            setKeyboardType('')
+            setKeyboardShown(false)
+        })
+
+        return () => {
+            keyboardDidShowListener.remove()
+            keyboardDidHideListener.remove()
+        }
+    }, [])
+
+    const modalContainerStyle: ViewStyle = {
+        justifyContent: keyboardShown ? 'flex-start' : 'flex-end'
+    }
+
     return (
-        <Modal isVisible={visible} onBackdropPress={onClose} style={styles.modal} backdropOpacity={0.5}>
-            <View style={styles.modalContainer}>
+        <Modal
+            isVisible={visible}
+            onBackdropPress={onClose}
+            style={[styles.modal, modalContainerStyle]}
+            backdropOpacity={0.5}
+        >
+            <View
+                style={[
+                    styles.modalContainer,
+                    keyboardShown && { marginTop: keyboardType === 'numeric' ? hp(16) : hp(2) }
+                ]}
+            >
                 <Pressable onPress={onClose}>
                     <View style={styles.closeModalLine} />
                 </Pressable>
@@ -41,29 +84,34 @@ const CreateProductModal = ({
                             <CustomTextInput
                                 placeholder="Code Bar"
                                 value={codeBar}
-                                onChangeText={value => console.log(value)}
+                                onChangeText={value => value}
                                 editable={false}
                             />
                         }
                     />
                     <CustomInputContainer
                         label="Nom du produit"
+                        error={error?.name}
                         element={
                             <CustomTextInput
                                 placeholder="Nom du produit"
-                                value={productName || ''}
-                                onChangeText={value => onProductChange(value, 'productName')}
-                                editable={productName === undefined ? true : false}
+                                value={name || ''}
+                                onChangeText={value => onProductChange(value, 'name')}
+                                editable={true}
+                                onFocus={() => setKeyboardType('')}
                             />
                         }
                     />
 
                     <CustomInputContainer
                         label="Quantité"
+                        error={error?.quantity}
                         element={
                             <CustomTextInput
                                 placeholder="Quantité"
                                 onChangeText={value => onQuantityChange(parseInt(value))}
+                                keyboardType="numeric"
+                                onFocus={() => setKeyboardType('numeric')}
                             />
                         }
                     />
@@ -73,13 +121,7 @@ const CreateProductModal = ({
                     <View style={styles.iconContainer}>
                         <Ionicons name="chevron-back-outline" size={24} color={colors.primary} />
                     </View>
-                    <Button
-                        text="Sauvegarder"
-                        onPress={() => {
-                            onSave()
-                            onClose()
-                        }}
-                    />
+                    <Button text="Sauvegarder" onPress={onSave} />
                 </View>
             </View>
         </Modal>
@@ -88,7 +130,6 @@ const CreateProductModal = ({
 
 const styles = StyleSheet.create({
     modal: {
-        justifyContent: 'flex-end',
         margin: 0
     },
 
@@ -96,26 +137,23 @@ const styles = StyleSheet.create({
         backgroundColor: colors.white,
         paddingHorizontal: wp(5),
         borderRadius: wp(2),
-        minHeight: '50%',
-        maxHeight: '90%',
         borderTopLeftRadius: hp(5),
         borderTopRightRadius: hp(5)
     },
 
     closeModalLine: {
-        marginBottom: hp(2),
+        marginVertical: hp(2),
         width: wp(15),
         height: hp(0.5),
         backgroundColor: colors.secondary,
         borderRadius: wp(1),
-        alignSelf: 'center',
-        marginTop: wp(2)
+        alignSelf: 'center'
     },
 
     modalTitle: {
         fontSize: FONT_SIZE_18,
         fontFamily: 'Poppins-SemiBold',
-        marginBottom: wp(5),
+        marginBottom: wp(2),
         textAlign: 'center',
         color: '#000'
     },
@@ -135,7 +173,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        paddingHorizontal: wp(5)
+        paddingHorizontal: wp(5),
+        paddingBottom: hp(1)
     },
 
     buttonText: {
@@ -155,4 +194,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default CreateProductModal
+export default memo(CreateProductModal)

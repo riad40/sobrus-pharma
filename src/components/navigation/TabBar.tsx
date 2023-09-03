@@ -1,6 +1,7 @@
 import React, { useRef } from 'react'
 import { View, Pressable, StyleSheet, Animated, Dimensions } from 'react-native'
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs'
+import { getFocusedRouteNameFromRoute } from '@react-navigation/native'
 import TabView from './TabView'
 import colors from '../../constants/colors'
 
@@ -19,6 +20,7 @@ const TabBar = ({ state, descriptors, navigation }: TabBarProps): JSX.Element =>
 
             {state.routes.map((route, index) => {
                 const { options } = descriptors[route.key]
+
                 const label =
                     options.tabBarLabel !== undefined
                         ? options.tabBarLabel
@@ -52,15 +54,21 @@ const TabBar = ({ state, descriptors, navigation }: TabBarProps): JSX.Element =>
                     })
                 }
 
+                const onFocus = () => {
+                    if (getFocusedRouteNameFromRoute(route) === 'ScanningScreen') {
+                        options.tabBarStyle = { display: 'none' }
+                    }
+                }
+
                 return (
                     <>
                         <Pressable
-                            key={index}
                             accessibilityRole="button"
                             accessibilityState={isFocused ? { selected: true } : {}}
                             accessibilityLabel={options.tabBarAccessibilityLabel}
                             testID={options.tabBarTestID}
                             onPress={onPress}
+                            onFocus={onFocus}
                             onLongPress={onLongPress}
                         >
                             <TabView focused={isFocused} label={label as string} key={index} />

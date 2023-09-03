@@ -5,6 +5,8 @@ import toConnectStyles from './ToConnect.styles'
 import { useNavigation, NavigationProp } from '@react-navigation/native'
 import RootStackParamsList from '../../navigations/RootStackParamsList'
 
+console.log('ToConnect screen loaded')
+
 const ToConnect = (): JSX.Element => {
     const [disabled, setDisabled] = useState<boolean>(false)
     const [loading, setLoading] = useState<boolean>(false)

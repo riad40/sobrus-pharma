@@ -31,7 +31,8 @@ const syncingStyles = StyleSheet.create({
         fontSize: 13,
         color: '#000',
         fontFamily: 'Poppins-Regular',
-        marginBottom: 20
+        marginBottom: 20,
+        textAlign: 'center'
     }
 })
 

@@ -1,11 +1,19 @@
 import React from 'react'
-import { Image, View, StyleSheet } from 'react-native'
+import { Image, View, StyleSheet, Pressable, Linking } from 'react-native'
 
 const NavBar = (): JSX.Element => {
+    const url = 'tel:+212530500500'
+
+    const handlPhoneCall = async () => {
+        await Linking.openURL(url)
+    }
+
     return (
         <View style={styles.container}>
             <Image source={require('../../assets/images/pharmalogo.png')} style={styles.image} />
-            <Image source={require('../../assets/images/doctorHeadset.png')} style={styles.image} />
+            <Pressable onPress={handlPhoneCall}>
+                <Image source={require('../../assets/images/doctorHeadset.png')} style={styles.image} />
+            </Pressable>
         </View>
     )
 }

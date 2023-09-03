@@ -1,19 +1,23 @@
 type Product = {
     id: number
     name: string
-    dci: string
-    classTherapeutic: string
-    laboratory: string
-    avatar: string
-    barcode: string
+    codeBar: string
+    status: string
+}
+
+type InventoryProducts = {
+    name: string
+    codeBar: string
+    quantity: number
+    status: string
 }
 
 type Inventory = {
     id: number
-    products: { codeBar?: string; productName?: string; quantity?: number }[]
+    products: InventoryProducts[]
     reason: string
     status: string
     date: string
 }
 
-export type { Product, Inventory }
+export type { Product, Inventory, InventoryProducts }

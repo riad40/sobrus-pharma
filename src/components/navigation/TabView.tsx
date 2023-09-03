@@ -7,17 +7,16 @@ import { tabInfos } from '../../constants/tabInfos'
 type TabViewProps = {
     focused: boolean
     label: string
-    key: number
 }
 
-const TabView = ({ focused, label, key }: TabViewProps): JSX.Element => {
-    const iconName = tabInfos[label].iconName
+const TabView = ({ focused, label }: TabViewProps): JSX.Element => {
+    const iconName = tabInfos[label]?.iconName
 
-    label = tabInfos[label].label
+    label = tabInfos[label]?.label
 
     return (
         <>
-            <View style={tabViewStyels.container} key={key}>
+            <View style={tabViewStyels.container}>
                 <Ionicons
                     name={iconName}
                     size={25}

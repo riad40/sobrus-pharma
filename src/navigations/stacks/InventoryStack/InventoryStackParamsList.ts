@@ -1,27 +1,16 @@
-import { StackNavigationProp } from '@react-navigation/stack'
+import { InventoryProducts } from '../../../@types'
 import { RouteProp } from '@react-navigation/native'
 
 type InventoryStackParamsList = {
     InventoriesList: undefined
-    InventoryDetails: { inventoryId: string }
+    ScanningScreen: { id: number }
+    InventoryDetails: { inventoryId: number }
+    KnownProducts: { products: InventoryProducts[] }
+    UnknownProducts: { products: InventoryProducts[] }
 }
 
-type InventoriesListScreenNavigationProp = StackNavigationProp<InventoryStackParamsList, 'InventoriesList'>
-
-type InventoriesListScreenRouteProp = RouteProp<InventoryStackParamsList, 'InventoriesList'>
-
-type InventoryDetailsScreenNavigationProp = StackNavigationProp<InventoryStackParamsList, 'InventoryDetails'>
-
-type InventoryDetailsScreenRouteProp = RouteProp<InventoryStackParamsList, 'InventoryDetails'>
-
-export type InventoriesListProps = {
-    navigation: InventoriesListScreenNavigationProp
-    route: InventoriesListScreenRouteProp
-}
-
-export type InventoryDetailsProps = {
-    navigation: InventoryDetailsScreenNavigationProp
-    route: InventoryDetailsScreenRouteProp
+export type InventoryStackNavProps<T extends keyof InventoryStackParamsList> = {
+    route: RouteProp<InventoryStackParamsList, T>
 }
 
 export default InventoryStackParamsList

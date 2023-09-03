@@ -9,14 +9,20 @@ import InventoryStackParamsList from '../../navigations/stacks/InventoryStack/In
 interface BottomContentProps {
     setFlashMode: (value: boolean) => void
     flashMode: boolean
+    modalMode?: boolean
+    setModalMode?: (value: boolean) => void
 }
 
-const BottomContent = ({ setFlashMode, flashMode }: BottomContentProps): JSX.Element => {
+const BottomContent = ({ setFlashMode, flashMode, modalMode, setModalMode }: BottomContentProps): JSX.Element => {
     const navigation = useNavigation<NavigationProp<InventoryStackParamsList>>()
+
+    const handleCloseButton = () => {
+        setModalMode ? setModalMode(!modalMode) : navigation.navigate('InventoriesList')
+    }
 
     return (
         <View style={styles.bottomContent}>
-            <TouchableOpacity style={styles.bottomContentButtom} onPress={() => navigation.navigate('InventoriesList')}>
+            <TouchableOpacity style={styles.bottomContentButtom} onPress={handleCloseButton}>
                 <Ionicons name="close-outline" size={20} color="white" />
                 <Text style={styles.bottomContentText}>férmé</Text>
             </TouchableOpacity>

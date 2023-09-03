@@ -1,13 +1,11 @@
 import React from 'react'
-import { View, Text, StyleSheet } from 'react-native'
-import Ionicons from 'react-native-vector-icons/Ionicons'
-import colors from '../../constants/colors'
+import { View, Text, StyleSheet, Image } from 'react-native'
 
 const ComingSoon = () => {
     return (
         <View style={styles.container}>
-            <Ionicons name="construct-outline" size={50} color={colors.primary} />
-            <Text style={styles.text}>soon...</Text>
+            <Image source={require('../../assets/images/coming-soon.png')} />
+            <Text style={styles.text}>Coming soon...</Text>
         </View>
     )
 }
@@ -20,9 +18,10 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     text: {
-        fontFamily: 'Poppins-Regular',
+        marginTop: 20,
         fontSize: 20,
-        color: colors.primary
+        color: '#000',
+        fontWeight: '700'
     }
 })
 

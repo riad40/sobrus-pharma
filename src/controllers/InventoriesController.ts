@@ -1,76 +1,81 @@
-import { doc, setDoc, getDocs, collection } from 'firebase/firestore'
-import { db } from '../configs/firebase'
-import { Inventory } from '../@types'
+import { Inventory, InventoryProducts } from '../@types'
+import realm from '../configs/realm'
 
 // Create a new inventory
 const createInventory = async (inventory: Inventory) => {
-    try {
-        const docRef = doc(db, 'inventories', inventory.id.toString())
-        const docSnap = await setDoc(docRef, inventory)
-        console.log('Document written with ID: ', docSnap)
-    } catch (e) {
-        console.error(e)
-    }
+    realm.write(() => {
+        realm.create<Inventory>('Inventory', {
+            id: inventory.id,
+            reason: inventory.reason,
+            status: inventory.status,
+            date: inventory.date,
+            products: inventory.products
+        })
+    })
 }
 
 // get all inventories
-const getInventories = async () => {
-    try {
-        const querySnapshot = await getDocs(collection(db, 'inventories'))
-        const inventories: Inventory[] = []
-        querySnapshot.forEach(doc => {
-            inventories.push(doc.data() as Inventory)
-            inventories[inventories.length - 1].id = inventories.length
-        })
-        return inventories
-    } catch (e) {
-        console.error(e)
-    }
-}
-
-// get inventory by id
-const getInventoryById = async (id: number) => {
-    try {
-        const docRef = doc(db, 'inventories', id.toString())
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const docSnap = await getDocs(docRef as any)
-        return docSnap.docs.map(doc => doc.data() as Inventory)
-    } catch (e) {
-        console.error(e)
-    }
+const getInventories = () => {
+    const inventories = realm.objects<Inventory>('Inventory')
+    return Array.from(inventories)
 }
 
 // get inventories by status
-const getInventoriesByStatus = async (status: string) => {
-    try {
-        const querySnapshot = await getDocs(collection(db, 'inventories'))
-        const inventories: Inventory[] = []
-        querySnapshot.forEach(doc => {
-            if (doc.data().status === status) {
-                inventories.push(doc.data() as Inventory)
-                inventories[inventories.length - 1].id = inventories.length
-            }
-        })
-        return inventories
-    } catch (e) {
-        console.error(e)
-    }
+const getInventoriesByStatus = (status: string) => {
+    console.log(status)
+    const inventories = realm.objects('Inventory').filtered(`status == "${status}"`)
+    return inventories
 }
 
-// update inventory status by id
-const updateInventoryStatusById = async (id: number, status: string) => {
-    try {
-        const docRef = doc(db, 'inventories', id.toString())
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const docSnap = await getDocs(docRef as any)
-        const inventory = docSnap.docs.map(doc => doc.data() as Inventory)[0]
-        inventory.status = status
-        const updatedDocRef = doc(db, 'inventories', inventory.id.toString())
-        const updatedDocSnap = await setDoc(updatedDocRef, inventory)
-        console.log('Document written with ID: ', updatedDocSnap)
-    } catch (e) {
-        console.error(e)
-    }
+// add products to inventory
+const addProductsToInventory = (id: number, products: InventoryProducts[]) => {
+    realm.write(() => {
+        const inventoryToUpdate = realm.objects<Inventory>('Inventory').filtered(`id == ${id}`)[0]
+
+        if (!inventoryToUpdate?.products) {
+            inventoryToUpdate.products = products
+            return
+        }
+        inventoryToUpdate.products = inventoryToUpdate.products.concat(products)
+    })
 }
 
-export { createInventory, getInventories, getInventoryById, getInventoriesByStatus, updateInventoryStatusById }
+// update inventory status
+const updateInventoryStatus = (id: number, status: string) => {
+    realm.write(() => {
+        const inventoryToUpdate = realm.objects<Inventory>('Inventory').filtered(`id == ${id}`)[0]
+        inventoryToUpdate.status = status
+    })
+}
+
+// get inventory products
+const getInventoryProducts = (id: number) => {
+    const inventory = realm.objects<Inventory>('Inventory').filtered(`id == ${id}`)[0]
+    return inventory.products
+}
+
+// get specific product from inventory
+const getInventoryProduct = (id: number, codeBar: string) => {
+    const inventory = realm.objects<Inventory>('Inventory').filtered(`id == ${id}`)[0]
+
+    const product = inventory.products.filter((product: InventoryProducts) => product.codeBar === codeBar)[0]
+
+    return product
+}
+
+// get inventory by id
+const getInventoryById = (id: number) => {
+    const inventory = realm.objects<Inventory>('Inventory').filtered(`id == ${id}`)[0]
+    return inventory
+}
+
+export {
+    createInventory,
+    getInventories,
+    getInventoriesByStatus,
+    addProductsToInventory,
+    updateInventoryStatus,
+    getInventoryProducts,
+    getInventoryProduct,
+    getInventoryById
+}
