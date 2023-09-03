@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
-import { FlatList, View, Text, StyleSheet, Pressable } from 'react-native'
+import { FlatList, View, Text, StyleSheet, Pressable, Image } from 'react-native'
 
 import { ModalContainer, CustomTextInput } from '../'
 
 import { Product } from '../../@types'
 
 import colors from '../../constants/colors'
-import { FONT_SIZE_16, FONT_SIZE_18 } from '../../constants/fontsSizes'
+import { FONT_SIZE_14, FONT_SIZE_18 } from '../../constants/fontsSizes'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -27,19 +27,12 @@ const SearchProducts = ({ visible, onClose, onProductSelect }: SearchProductsPro
     const renderProduct = ({ item }: { item: Product }) => (
         <Pressable style={styles.productContainer} onPress={() => onProductSelect(item)}>
             <Text style={styles.productName}>{item.name}</Text>
-            <Ionicons name="medical-outline" size={wp(8)} color={colors.primary} />
+            <Image source={require('../../assets/images/pill.png')} />
         </Pressable>
     )
 
     return (
-        <ModalContainer
-            visible={visible}
-            onClose={onClose}
-            style={{
-                backgroundColor: '#eee',
-                modalHeight: '90%'
-            }}
-        >
+        <ModalContainer visible={visible} onClose={onClose} style={{ backgroundColor: '#eee', modalHeight: '90%' }}>
             <Pressable onPress={onClose}>
                 <View style={styles.closeModalLine} />
             </Pressable>
@@ -62,8 +55,8 @@ const SearchProducts = ({ visible, onClose, onProductSelect }: SearchProductsPro
                 />
             ) : (
                 <View style={styles.noSearch}>
-                    <Ionicons name="search-outline" size={wp(10)} color={'#000'} />
-                    <Text style={styles.noSearchText}>Rechercher un produit</Text>
+                    <Image source={require('../../assets/images/loupe(3).png')} style={{ resizeMode: 'contain' }} />
+                    <Text style={styles.noSearchText}>Merci de taper le nom du produit que vous souhaitez ajouter</Text>
                 </View>
             )}
         </ModalContainer>
@@ -88,15 +81,17 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         marginBottom: hp(1),
-        paddingHorizontal: wp(2),
-        paddingVertical: hp(1),
+        paddingHorizontal: wp(3.5),
+        paddingVertical: hp(1.5),
         backgroundColor: '#fff',
         borderRadius: 10
     },
 
     productName: {
-        fontSize: FONT_SIZE_16,
-        color: '#000'
+        fontSize: FONT_SIZE_14,
+        textTransform: 'uppercase',
+        color: '#000',
+        fontWeight: '800'
     },
 
     closeModalLine: {
@@ -110,12 +105,17 @@ const styles = StyleSheet.create({
 
     noSearch: {
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        marginTop: hp(10)
     },
 
     noSearchText: {
-        fontSize: FONT_SIZE_16,
-        color: '#000'
+        marginTop: hp(2),
+        fontSize: FONT_SIZE_14,
+        color: '#000',
+        textAlign: 'center',
+        fontFamily: 'Poppins-Medium',
+        width: '80%'
     },
 
     searchInputContainer: {

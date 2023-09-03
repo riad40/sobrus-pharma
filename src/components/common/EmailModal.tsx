@@ -20,6 +20,7 @@ interface EmailModalProps {
     onEmailChange: (value: string) => void
     onMessageChange: (value: string) => void
     loading?: boolean
+    emailError?: string
 }
 
 const EmailModal = ({
@@ -31,7 +32,8 @@ const EmailModal = ({
     onSave,
     onEmailChange,
     onMessageChange,
-    loading
+    loading,
+    emailError
 }: EmailModalProps): JSX.Element => {
     return (
         <Modal isVisible={visible} onBackdropPress={onClose} style={styles.modal} backdropOpacity={0.5}>
@@ -45,6 +47,7 @@ const EmailModal = ({
                     {onlyEmail && (
                         <CustomInputContainer
                             label="Email"
+                            error={emailError}
                             element={
                                 <CustomTextInput
                                     placeholder="Email"

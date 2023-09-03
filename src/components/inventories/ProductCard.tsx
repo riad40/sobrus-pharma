@@ -1,10 +1,9 @@
 import React from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, Image } from 'react-native'
 
 import colors from '../../constants/colors'
 import { FONT_SIZE_12, FONT_SIZE_14 } from '../../constants/fontsSizes'
 
-import Ionicons from 'react-native-vector-icons/Ionicons'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 
 interface ProductCardProps {
@@ -17,7 +16,7 @@ const ProductCard = ({ product }: ProductCardProps): JSX.Element => {
     return (
         <View style={styles.container}>
             <View style={styles.imageContainer}>
-                <Ionicons name="newspaper-outline" size={wp(10)} color={colors.primary} />
+                <Image source={require('../../assets/images/packaging.png')} style={styles.image} />
             </View>
             <View style={styles.detailsContainer}>
                 <Text style={styles.name}>{name}</Text>
@@ -47,12 +46,13 @@ const styles = StyleSheet.create({
         overflow: 'hidden',
         width: '20%',
         height: wp(15),
-        marginRight: wp(3)
+        marginRight: wp(5)
     },
 
     image: {
         width: '100%',
-        height: '100%'
+        height: '100%',
+        resizeMode: 'contain'
     },
 
     detailsContainer: {

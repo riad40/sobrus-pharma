@@ -5,9 +5,11 @@ import { BarCodeReadEvent } from 'react-native-camera'
 
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import scanningStyles from './scanning.styles'
-import { SearchProducts, CreateProductModal, SuccessAlert, ProductExistAlert, QrcodeScanner } from '../../../components'
+import { SearchProducts, CreateProductModal, QrcodeScanner, ProductExistAlert } from '../../../components'
 
-import InventoryStackParamsList from '../../../navigations/stacks/InventoryStack/InventoryStackParamsList'
+import InventoryStackParamsList, {
+    InventoryStackNavProps
+} from '../../../navigations/stacks/InventoryStack/InventoryStackParamsList'
 import { useNavigation, NavigationProp } from '@react-navigation/native'
 
 import requestAccessCameraPermission from '../../../helpers/Permissions/cameraPermession'
@@ -21,7 +23,7 @@ import realm, { getNextProductId } from '../../../configs/realm'
 
 // @types
 interface ScaningScreenProps {
-    route: { params: { id: number } }
+    route: InventoryStackNavProps<'ScanningScreen'>['route']
 }
 
 type ProductData = { codeBar: string; name: string; quantity: number; status: string }
@@ -29,9 +31,10 @@ type ProductData = { codeBar: string; name: string; quantity: number; status: st
 type modalsVisible = {
     createProductModal: boolean
     searchProductsModal: boolean
-    successAlert: boolean
     productExistAlert: boolean
 }
+
+type IsProductExist = { name: string; quantity: number; isProductExist?: boolean }
 
 const ScaningScreen = ({ route }: ScaningScreenProps): JSX.Element => {
     const { id } = route.params
@@ -40,29 +43,25 @@ const ScaningScreen = ({ route }: ScaningScreenProps): JSX.Element => {
 
     const [hasPermission, setHasPermission] = useState<boolean>(false)
 
-    const [cameraActive, setCameraActive] = useState<boolean>(true)
-
     const [isUnknownProduct, setIsUnknownProduct] = useState<boolean>(false)
 
-    const [isProductExist, setIsProductExist] = useState<boolean>(false)
+    const [isProductExist, setIsProductExist] = useState<IsProductExist>({
+        name: '',
+        quantity: 0,
+        isProductExist: false
+    })
+
+    const [error, setError] = useState<{ name: string; quantity: string }>({ name: '', quantity: '' })
 
     const [modalsVisible, setModalsVisible] = useState<modalsVisible>({
         createProductModal: false,
         searchProductsModal: false,
-        successAlert: false,
         productExistAlert: false
     })
 
     const [selectedOption, setSelectedOption] = useState<string>('replace')
 
-    const [productsData, setProductsData] = useState<ProductData>({
-        codeBar: '',
-        name: '',
-        quantity: 0,
-        status: ''
-    })
-
-    const [inventoryProducts, setInventoryProducts] = useState<ProductData[]>([])
+    const [productsData, setProductsData] = useState<ProductData>({ codeBar: '', name: '', quantity: 0, status: '' })
 
     const checkPermission = async () => {
         const permission = await requestAccessCameraPermission()
@@ -70,16 +69,26 @@ const ScaningScreen = ({ route }: ScaningScreenProps): JSX.Element => {
     }
 
     const handleSaveProduct = () => {
-        const { codeBar, name, quantity, status } = productsData
+        const { codeBar, name, quantity } = productsData
 
-        setModalsVisible({ ...modalsVisible, successAlert: true, createProductModal: false })
+        // check if name is empty and set error message
+        if (!name || name === '') {
+            setError({ ...error, name: 'Le nom est obligatoire' })
+            return
+        }
 
-        setInventoryProducts([...inventoryProducts, { codeBar, name, quantity, status: status }])
+        // check if quantity is empty and set error message
+        if (!quantity || quantity === 0 || typeof quantity == 'string') {
+            setError({ ...error, quantity: 'La valeur est invalide ou obligatoire' })
+            return
+        }
+
+        setModalsVisible({ ...modalsVisible, createProductModal: false })
 
         if (isUnknownProduct) handleAddUnknownProduct()
 
-        if (isProductExist) {
-            setModalsVisible({ ...modalsVisible, successAlert: false, createProductModal: false })
+        if (isProductExist.isProductExist) {
+            setModalsVisible({ ...modalsVisible, createProductModal: true })
 
             const product = getInventoryProduct(id, codeBar)
 
@@ -92,9 +101,11 @@ const ScaningScreen = ({ route }: ScaningScreenProps): JSX.Element => {
                     product.quantity = product.quantity + quantity
                 })
             }
-
-            navigation.navigate('InventoryDetails', { inventoryId: id })
+        } else {
+            addProductsToInventory(id, [productsData])
         }
+
+        navigation.navigate('InventoryDetails', { inventoryId: id })
     }
 
     const handleProductSelected = (product: Product) => {
@@ -107,13 +118,11 @@ const ScaningScreen = ({ route }: ScaningScreenProps): JSX.Element => {
         if (productExist) {
             const { name, codeBar, quantity, status } = productExist
 
-            setProductsData({ name, codeBar, quantity, status })
+            setProductsData({ name, codeBar, quantity: 0, status })
 
             setModalsVisible({ ...modalsVisible, productExistAlert: true })
 
-            setCameraActive(false)
-
-            setIsProductExist(true)
+            setIsProductExist({ name, quantity, isProductExist: true })
 
             return
         }
@@ -127,20 +136,10 @@ const ScaningScreen = ({ route }: ScaningScreenProps): JSX.Element => {
         createUnknownProducts({ id: getNextProductId(realm), codeBar, name, status })
     }
 
-    const saveProductsToInventory = () => {
-        addProductsToInventory(id, inventoryProducts)
-
-        setModalsVisible({ ...modalsVisible, successAlert: false })
-
-        setInventoryProducts([])
-    }
-
     const handleQRCodeScanned = (e: BarCodeReadEvent) => {
         const codeBar = e.data
 
         const product = realm.objects<Product>('Product').filtered(`codeBar = "${codeBar}"`)[0]
-
-        console.log(product)
 
         // check if product exist in inventory
         const productExist = getInventoryProduct(id, codeBar)
@@ -148,13 +147,11 @@ const ScaningScreen = ({ route }: ScaningScreenProps): JSX.Element => {
         if (productExist) {
             const { name, codeBar, quantity, status } = productExist
 
-            setProductsData({ name, codeBar, quantity, status })
+            setProductsData({ name, codeBar, quantity: 0, status })
 
             setModalsVisible({ ...modalsVisible, productExistAlert: true })
 
-            setCameraActive(false)
-
-            setIsProductExist(true)
+            setIsProductExist({ name, quantity, isProductExist: true })
 
             return
         }
@@ -164,23 +161,27 @@ const ScaningScreen = ({ route }: ScaningScreenProps): JSX.Element => {
         setProductsData({ codeBar, name: product?.name || '', quantity: 0, status: product?.status || 'unknown' })
 
         setIsUnknownProduct(!product)
-
-        setCameraActive(false)
     }
 
     useEffect(() => {
-        const unscribe = navigation.addListener('focus', () => {
+        const unsubscribe = navigation.addListener('focus', () => {
             checkPermission()
+
+            setIsUnknownProduct(false)
+            setIsProductExist({ name: '', quantity: 0, isProductExist: false })
+            setError({ name: '', quantity: '' })
+            setModalsVisible({ createProductModal: false, searchProductsModal: false, productExistAlert: false })
+            setProductsData({ codeBar: '', name: '', quantity: 0, status: '' })
         })
 
-        return unscribe
+        return unsubscribe
     }, [])
 
     return (
         <SafeAreaView>
             {hasPermission ? (
                 <>
-                    {cameraActive ? (
+                    {!modalsVisible.createProductModal && !modalsVisible.searchProductsModal ? (
                         <Pressable
                             style={scanningStyles.topContent}
                             onPress={() => setModalsVisible({ ...modalsVisible, searchProductsModal: true })}
@@ -196,14 +197,18 @@ const ScaningScreen = ({ route }: ScaningScreenProps): JSX.Element => {
                         onClose={() => setModalsVisible({ ...modalsVisible, searchProductsModal: false })}
                     />
 
-                    <QrcodeScanner
-                        cameraActive={cameraActive}
-                        setCameraActive={setCameraActive}
-                        handleQRCodeScanned={handleQRCodeScanned}
-                    />
+                    {!modalsVisible.createProductModal && !modalsVisible.searchProductsModal && (
+                        <QrcodeScanner
+                            cameraActive
+                            setCameraActive={() => {
+                                console.log('setCameraActive')
+                            }}
+                            handleQRCodeScanned={handleQRCodeScanned}
+                        />
+                    )}
 
                     <ProductExistAlert
-                        product={productsData}
+                        product={isProductExist}
                         visible={modalsVisible.productExistAlert}
                         onClose={() => setModalsVisible({ ...modalsVisible, productExistAlert: false })}
                         selectedOption={selectedOption}
@@ -216,23 +221,19 @@ const ScaningScreen = ({ route }: ScaningScreenProps): JSX.Element => {
                     <CreateProductModal
                         visible={modalsVisible.createProductModal}
                         onClose={() => setModalsVisible({ ...modalsVisible, createProductModal: false })}
-                        codeBar={productsData.codeBar.toString()}
+                        codeBar={productsData.codeBar?.toString()}
                         name={productsData.name}
                         quantity={productsData.quantity}
-                        onProductChange={(value: string) => setProductsData({ ...productsData, name: value })}
-                        onQuantityChange={(value: number) => setProductsData({ ...productsData, quantity: value })}
-                        onSave={handleSaveProduct}
-                    />
-
-                    <SuccessAlert
-                        visible={modalsVisible.successAlert}
-                        onClose={() => setModalsVisible({ ...modalsVisible, successAlert: false })}
-                        message="Produit ajouté avec succès"
-                        onContinue={saveProductsToInventory}
-                        onQuit={() => {
-                            saveProductsToInventory()
-                            navigation.navigate('InventoryDetails', { inventoryId: id })
+                        onProductChange={(value: string) => {
+                            setProductsData({ ...productsData, name: value })
+                            setError({ ...error, name: '' })
                         }}
+                        onQuantityChange={(value: number) => {
+                            setProductsData({ ...productsData, quantity: value })
+                            setError({ ...error, quantity: '' })
+                        }}
+                        onSave={handleSaveProduct}
+                        error={error}
                     />
                 </>
             ) : (

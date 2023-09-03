@@ -9,11 +9,14 @@ import { FONT_SIZE_14, FONT_SIZE_18 } from '../../constants/fontsSizes'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 
-import RootStackParamsList from '../../navigations/RootStackParamsList'
+import InventoryStackParamsList from '../../navigations/stacks/InventoryStack/InventoryStackParamsList'
 import { useNavigation, NavigationProp } from '@react-navigation/native'
 
 import { createInventory } from '../../controllers/InventoriesController'
 import { Inventory, InventoryProducts } from '../../@types'
+
+import { useAppDispatch } from '../../state/store'
+import { saveInventoryNotification } from '../../state/features/NotificationSlice'
 
 import realm, { getNextInventoryId } from '../../configs/realm'
 
@@ -26,11 +29,13 @@ interface CreateInventoryModalProps {
 const options = ['Inventaire annuel', 'Inventaire tournant', 'Inventaire exceptionnel', 'Inventaire de contrôle']
 
 const CreateInventoryModal = ({ visible, onClose }: CreateInventoryModalProps): JSX.Element => {
-    const navigation = useNavigation<NavigationProp<RootStackParamsList>>()
+    const navigation = useNavigation<NavigationProp<InventoryStackParamsList>>()
 
     const [date, setDate] = useState<string>('')
 
     const [reason, setReason] = useState<string>('')
+
+    const dispatch = useAppDispatch()
 
     const saveInventory = () => {
         const newInventory: Inventory = {
@@ -42,6 +47,8 @@ const CreateInventoryModal = ({ visible, onClose }: CreateInventoryModalProps): 
         }
 
         createInventory(newInventory)
+
+        dispatch(saveInventoryNotification({ inventoriesNotification: "L'inventaire a été créé avec succès" }))
 
         onClose()
 

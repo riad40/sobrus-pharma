@@ -11,23 +11,25 @@ import {
     EmailSentAlert
 } from '../../../components'
 
-import { RouteProp } from '@react-navigation/native'
+import { useToast } from 'react-native-toast-notifications'
+
 import { Inventory } from '../../../@types'
 
-import { useNavigation, NavigationProp } from '@react-navigation/native'
-import RootStackParamsList from '../../../navigations/RootStackParamsList'
+import { useNavigation, NavigationProp, RouteProp } from '@react-navigation/native'
 import InventoryStackParamsList from '../../../navigations/stacks/InventoryStack/InventoryStackParamsList'
 
 import { updateInventoryStatus, getInventoryById } from '../../../controllers/InventoriesController'
 
 import api from '../../../configs/api'
 
+console.log('Inventory details screen bundled')
+
 type InventoryDetailsRouteProp = RouteProp<{ InventoryDetails: { inventoryId: number } }, 'InventoryDetails'>
 
 const InventoryDetails = ({ route }: { route: InventoryDetailsRouteProp }): JSX.Element => {
     const { inventoryId } = route.params
 
-    const navigation = useNavigation<NavigationProp<RootStackParamsList & InventoryStackParamsList>>()
+    const navigation = useNavigation<NavigationProp<InventoryStackParamsList>>()
 
     const [inventory, setInventory] = useState<Inventory>(getInventoryById(inventoryId))
 
@@ -40,6 +42,10 @@ const InventoryDetails = ({ route }: { route: InventoryDetailsRouteProp }): JSX.
     const [email, setEmail] = useState<string>('')
 
     const [loading, setLoading] = useState<boolean>(false)
+
+    const [emailError, setEmailError] = useState<string>('')
+
+    const toast = useToast()
 
     const closeInventory = () => {
         updateInventoryStatus(inventoryId, 'férmé')
@@ -60,6 +66,13 @@ const InventoryDetails = ({ route }: { route: InventoryDetailsRouteProp }): JSX.
     const sendEmail = async () => {
         setEmailModalVisible(true)
 
+        const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/
+
+        if (!email.trim() || !emailRegex.test(email.trim())) {
+            setEmailError('Veuillez entrer un email valide')
+            return
+        }
+
         setLoading(true)
 
         const mail = await api.post('/sendMail', {
@@ -71,7 +84,7 @@ const InventoryDetails = ({ route }: { route: InventoryDetailsRouteProp }): JSX.
 
         if (mail.status === 200) {
             setEmailModalVisible(false)
-            setEmailSentAlertVisible(true)
+            toast.show('Email envoyé avec succès', { type: 'normal', placement: 'center', duration: 3000 })
             setEmail('')
             setLoading(false)
         }
@@ -106,7 +119,7 @@ const InventoryDetails = ({ route }: { route: InventoryDetailsRouteProp }): JSX.
         ]
 
         setDetails(details)
-    }, [])
+    }, [inventory])
 
     return (
         <SafeAreaView>
@@ -158,13 +171,17 @@ const InventoryDetails = ({ route }: { route: InventoryDetailsRouteProp }): JSX.
                         onClose={() => {
                             setEmailModalVisible(false)
                         }}
-                        onEmailChange={setEmail}
+                        onEmailChange={(value: string) => {
+                            setEmail(value)
+                            setEmailError('')
+                        }}
                         onSave={sendEmail}
                         loading={loading}
                         onMessageChange={(value: string) => {
                             console.log(value)
                         }}
                         onlyEmail
+                        emailError={emailError}
                     />
 
                     <EmailSentAlert

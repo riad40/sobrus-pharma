@@ -61,7 +61,7 @@ const QrcodeScanner = ({
                                 <></>
                             )
                         }
-                        cameraTimeout={3000}
+                        cameraTimeout={20000}
                     />
                 ) : (
                     <Pressable style={styles.activeCamera} onPress={() => setCameraActive(true)}>

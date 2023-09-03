@@ -9,10 +9,10 @@ interface CustomInputContainerProps {
     label?: string
     element: React.ReactNode
     icon?: string
-    validationError?: string
+    error?: string
 }
 
-const CustomInputContainer = ({ label, element, icon, validationError }: CustomInputContainerProps): JSX.Element => {
+const CustomInputContainer = ({ label, element, icon, error }: CustomInputContainerProps): JSX.Element => {
     return (
         <>
             {label && <Text style={styles.inputLabel}>{label}</Text>}
@@ -20,7 +20,7 @@ const CustomInputContainer = ({ label, element, icon, validationError }: CustomI
                 style={[
                     styles.inputContainer,
                     {
-                        borderColor: validationError ? 'red' : 'lightgrey'
+                        borderColor: error ? 'red' : 'lightgrey'
                     }
                 ]}
             >
@@ -28,7 +28,7 @@ const CustomInputContainer = ({ label, element, icon, validationError }: CustomI
 
                 {icon && <Ionicons name={icon} size={hp(3)} color={colors.secondary} />}
             </View>
-            {validationError && <Text style={{ color: 'red', fontSize: FONT_SIZE_14 }}>{validationError}</Text>}
+            {error && <Text style={{ color: 'red', fontSize: FONT_SIZE_14 }}>{error}</Text>}
         </>
     )
 }
@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginBottom: hp(2)
+        marginBottom: hp(1.5)
     },
     inputLabel: {
         fontSize: FONT_SIZE_14,

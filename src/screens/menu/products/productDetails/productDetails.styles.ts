@@ -32,7 +32,7 @@ const productDetailsStyles = StyleSheet.create({
         width: '100%',
         borderRadius: 10,
         backgroundColor: '#FFF',
-        paddingVertical: wp(5)
+        paddingVertical: wp(2)
     },
 
     info: {

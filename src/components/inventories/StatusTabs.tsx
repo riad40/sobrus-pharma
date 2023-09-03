@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react'
-import { Text, View, Pressable, Animated, StyleSheet } from 'react-native'
+import { Text, View, TouchableOpacity, Animated, StyleSheet } from 'react-native'
 
 import colors from '../../constants/colors'
 import { SCREEN_WIDTH } from '../../constants/dimensions'
@@ -21,6 +21,7 @@ const StatusTabs = (): JSX.Element => {
     const navigation = useNavigation<NavigationProp<InventoryStackParamsList, 'InventoriesList'>>()
 
     const [activeTab, setActiveTab] = useState(0)
+
     const tabPosition = useRef(new Animated.Value(0)).current
 
     const handleTabChange = (tabIndex: number) => {
@@ -60,23 +61,23 @@ const StatusTabs = (): JSX.Element => {
     return (
         <>
             <View style={styles.tabsContainer}>
-                <Pressable onPress={() => handleTabChange(0)}>
+                <TouchableOpacity onPress={() => handleTabChange(0)} style={styles.tabContainer}>
                     <Text style={[styles.tabText, { color: activeTab === 0 ? colors.primary : colors.secondary }]}>
                         Tout
                     </Text>
-                </Pressable>
+                </TouchableOpacity>
 
-                <Pressable onPress={() => handleTabChange(1)}>
+                <TouchableOpacity onPress={() => handleTabChange(1)} style={styles.tabContainer}>
                     <Text style={[styles.tabText, { color: activeTab === 1 ? colors.primary : colors.secondary }]}>
                         Fermé
                     </Text>
-                </Pressable>
+                </TouchableOpacity>
 
-                <Pressable onPress={() => handleTabChange(2)}>
+                <TouchableOpacity onPress={() => handleTabChange(2)} style={styles.tabContainer}>
                     <Text style={[styles.tabText, { color: activeTab === 2 ? colors.primary : colors.secondary }]}>
                         Ouvert
                     </Text>
-                </Pressable>
+                </TouchableOpacity>
             </View>
             <Animated.View
                 style={[
@@ -96,13 +97,19 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        paddingHorizontal: wp('15%'),
-        paddingTop: hp('2%'),
-        paddingBottom: hp('1%'),
+        paddingTop: hp(2),
+        paddingBottom: hp(1),
         width: '100%',
         backgroundColor: colors.white,
+        position: 'absolute',
+        top: hp(9),
+        zIndex: 1,
         borderTopLeftRadius: wp(10),
         borderTopRightRadius: wp(10)
+    },
+
+    tabContainer: {
+        width: SCREEN_WIDTH / 3
     },
 
     tabText: {
@@ -113,8 +120,9 @@ const styles = StyleSheet.create({
     },
 
     bottomBorder: {
-        height: hp('0.3%'),
-        backgroundColor: colors.primary
+        height: hp(0.3),
+        backgroundColor: colors.primary,
+        zIndex: 300
     }
 })
 

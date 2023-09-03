@@ -1,9 +1,9 @@
 import React from 'react'
 import { View, StyleSheet, SafeAreaView, FlatList } from 'react-native'
 
-import { widthPercentageToDP as wp } from 'react-native-responsive-screen'
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 
-import { ScreenContainer, ProductCard } from '../../../components'
+import { Header, ProductCard } from '../../../components'
 
 import { InventoryProducts } from '../../../@types'
 
@@ -17,29 +17,34 @@ const KnownProducts = ({ route }: KnownProductsProps): JSX.Element => {
     return (
         <>
             <SafeAreaView>
-                <ScreenContainer title="Produits connus" icon>
-                    <View style={styles.container}>
-                        <FlatList
-                            data={products}
-                            keyExtractor={(item, index) => index.toString()}
-                            renderItem={({ item }) => <ProductCard product={item} />}
-                            showsVerticalScrollIndicator={false}
-                        />
-                    </View>
-                </ScreenContainer>
+                <Header title="Produits connus" icon height={100} />
+                <View style={styles.startView} />
+                <View style={styles.container}>
+                    <FlatList
+                        data={products}
+                        keyExtractor={(item, index) => index.toString()}
+                        renderItem={({ item }) => <ProductCard product={item} />}
+                        showsVerticalScrollIndicator={false}
+                    />
+                </View>
             </SafeAreaView>
         </>
     )
 }
 
 const styles = StyleSheet.create({
-    container: {
+    startView: {
+        position: 'absolute',
+        top: hp(9),
+        zIndex: 9999,
         borderTopLeftRadius: wp(10),
         borderTopRightRadius: wp(10),
         backgroundColor: '#f2f2f2',
-        paddingHorizontal: wp(2),
-        paddingVertical: wp(6),
+        paddingVertical: hp(1.5),
         width: '100%'
+    },
+    container: {
+        paddingHorizontal: wp(2)
     }
 })
 

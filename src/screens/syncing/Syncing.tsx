@@ -13,6 +13,8 @@ import realm from '../../configs/realm'
 
 import { Product } from '../../@types'
 
+console.log('Syncing screen loaded')
+
 const Syncing = (): JSX.Element => {
     const navigation = useNavigation<NavigationProp<RootStackParamsList>>()
 

@@ -1,14 +1,13 @@
 import React from 'react'
-import { Text, View, Pressable, StyleSheet } from 'react-native'
+import { Text, View, Pressable, StyleSheet, Image } from 'react-native'
 
-import Ionicons from 'react-native-vector-icons/Ionicons'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 
 import colors from '../../constants/colors'
 import { FONT_SIZE_14, FONT_SIZE_12 } from '../../constants/fontsSizes'
 
+import InventoryStackParamsList from '../../navigations/stacks/InventoryStack/InventoryStackParamsList'
 import { useNavigation, NavigationProp } from '@react-navigation/native'
-import RootStackParamsList from '../../navigations/RootStackParamsList'
 
 import { Inventory } from '../../@types'
 
@@ -20,7 +19,7 @@ interface InventoryCardProps {
 const InventoryCard = ({ inventory, onPress }: InventoryCardProps): JSX.Element => {
     const disabled = inventory.status === 'férmé' ? true : false
 
-    const navigation = useNavigation<NavigationProp<RootStackParamsList, 'ScanningScreen'>>()
+    const navigation = useNavigation<NavigationProp<InventoryStackParamsList, 'ScanningScreen'>>()
 
     const { status } = inventory
 
@@ -63,16 +62,17 @@ const InventoryCard = ({ inventory, onPress }: InventoryCardProps): JSX.Element 
                         style={[
                             styles.cardRight,
                             {
-                                backgroundColor: status === 'ouvert' ? colors.primary : '#F5F5F8'
+                                backgroundColor: status === 'ouvert' ? '#00C6AE' : '#F5F5F8'
                             }
                         ]}
                         disabled={disabled}
                     >
-                        <Ionicons
-                            name="scan-outline"
-                            size={30}
-                            color={status === 'ouvert' ? colors.white : '#000'}
-                            style={{ marginLeft: wp(0.5) }}
+                        <Image
+                            source={
+                                status === 'ouvert'
+                                    ? require('../../assets/images/qr-scan-enable(2).png')
+                                    : require('../../assets/images/qr-scan-disable(1).png')
+                            }
                         />
                     </Pressable>
                 </View>

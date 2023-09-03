@@ -27,6 +27,7 @@ import SearchBar from './products/SearchBar'
 import ContactAlert from './menu/ContactAlert'
 import EmailModal from './common/EmailModal'
 import EmailSentAlert from './inventories/EmailSentAlert'
+import Header from './common/Header'
 
 export {
     NavBar,
@@ -57,5 +58,6 @@ export {
     SearchBar,
     ContactAlert,
     EmailModal,
-    EmailSentAlert
+    EmailSentAlert,
+    Header
 }

@@ -1,39 +1,29 @@
 import React from 'react'
-import { View, TouchableOpacity, StyleSheet } from 'react-native'
+import { View, TouchableOpacity, StyleSheet, Image } from 'react-native'
 
 import colors from '../../constants/colors'
 import { CustomTextInput } from '../'
 
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 
 interface SearchBarProps {
     scanPressed: () => void
     search: string
-    setSearch: (value: string) => void
+    onChange: (value: string) => void
 }
 
-const SearchBar = ({ scanPressed, search, setSearch }: SearchBarProps): JSX.Element => {
+const SearchBar = ({ scanPressed, search, onChange }: SearchBarProps): JSX.Element => {
     return (
         <View style={styles.container}>
             <View style={styles.searchInputContainer}>
-                <CustomTextInput
-                    placeholder="Rechercher un produit"
-                    value={search}
-                    onChangeText={value => setSearch(value)}
-                />
+                <CustomTextInput placeholder="Rechercher un produit" value={search} onChangeText={onChange} />
 
                 <Ionicons name="search-sharp" size={20} color="black" />
             </View>
 
             <TouchableOpacity style={styles.scanContainer} onPress={scanPressed}>
-                <MaterialCommunityIcons
-                    name="credit-card-scan-outline"
-                    size={20}
-                    color="#000"
-                    style={styles.scanIcon}
-                />
+                <Image source={require('../../assets/images/barcode.png')} />
             </TouchableOpacity>
         </View>
     )

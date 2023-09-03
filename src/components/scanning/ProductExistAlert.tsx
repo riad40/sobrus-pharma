@@ -7,14 +7,12 @@ import colors from '../../constants/colors'
 import { FONT_SIZE_14, FONT_SIZE_16 } from '../../constants/fontsSizes'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 
-import { InventoryProducts } from '../../@types'
-
 interface ProductExistAlertProps {
     visible: boolean
     onClose: () => void
     selectedOption?: string
     onOptionSelected: (option: string) => void
-    product: InventoryProducts
+    product: { name: string; quantity: number }
 }
 
 const ProductExistAlert = ({
@@ -51,7 +49,7 @@ const ProductExistAlert = ({
                         }}
                         style={[styles.button, selectedOption === 'add' ? { backgroundColor: colors.primary } : {}]}
                     >
-                        <Text style={[styles.buttonText, { color: colors.white }]}>Ecraiser</Text>
+                        <Text style={[styles.buttonText, { color: colors.white }]}>Écraser</Text>
                     </TouchableOpacity>
                 </View>
             </View>

@@ -4,13 +4,15 @@ import { SafeAreaView, View, Image, Text } from 'react-native'
 import productDetailsStyles from './productDetails.styles'
 import { ScreenContainer } from '../../../../components'
 
+import { MenuStackNavProps } from '../../../../navigations/stacks/MenuStack/MenuStackParamsList'
+
 import { Product } from '../../../../@types'
 
 import realm from '../../../../configs/realm'
 
 // @types
 interface ProductDetailsProps {
-    route: { params: { id: number } }
+    route: MenuStackNavProps<'ProductDetails'>['route']
 }
 
 const ProductsList = ({ route }: ProductDetailsProps): JSX.Element => {
@@ -29,7 +31,7 @@ const ProductsList = ({ route }: ProductDetailsProps): JSX.Element => {
             <ScreenContainer title="Détails du produit" icon>
                 <View style={productDetailsStyles.container}>
                     <View style={productDetailsStyles.imageContainer}>
-                        <Image source={require('../../../../assets/images/pill.png')} />
+                        <Image source={require('../../../../assets/images/product-development(2).png')} />
                     </View>
 
                     <Text style={productDetailsStyles.heading}>Informations du produit</Text>

@@ -2,11 +2,13 @@ import { configureStore, combineReducers, getDefaultMiddleware } from '@reduxjs/
 import { useDispatch, useSelector, TypedUseSelectorHook } from 'react-redux'
 import inventorySlice from './features/InventorySlice'
 import productSlice from './features/ProductSlice'
+import notificationSlice from './features/NotificationSlice'
 
 // combine all reducers
 const rootReducer = combineReducers({
     inventories: inventorySlice,
-    products: productSlice
+    products: productSlice,
+    notifications: notificationSlice
 })
 
 // create store

@@ -3,13 +3,18 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import { FONT_SIZE_14, FONT_SIZE_16 } from '../../../../constants/fontsSizes'
 
 const productsListStyles = StyleSheet.create({
-    container: {
+    startView: {
+        position: 'absolute',
+        top: hp(9),
+        zIndex: 9999,
         borderTopLeftRadius: wp(10),
         borderTopRightRadius: wp(10),
         backgroundColor: '#f2f2f2',
-        paddingHorizontal: wp(5),
-        paddingTop: hp(3),
+        paddingVertical: hp(1.5),
         width: '100%'
+    },
+    container: {
+        paddingHorizontal: wp(5)
     },
 
     productContainer: {
@@ -34,6 +39,18 @@ const productsListStyles = StyleSheet.create({
     lightText: {
         fontSize: FONT_SIZE_14,
         fontFamily: 'Poppins-light',
+        color: '#707070'
+    },
+
+    noProductsContainer: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: hp(10)
+    },
+
+    noProductsText: {
+        fontSize: FONT_SIZE_16,
+        fontFamily: 'Poppins-SemiBold',
         color: '#707070'
     }
 })

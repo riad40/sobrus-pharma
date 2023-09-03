@@ -7,7 +7,7 @@ const MenuStack = createStackNavigator<MenuStackParamsList>()
 
 const MenuStackScreen = (): JSX.Element => {
     return (
-        <MenuStack.Navigator screenOptions={{ headerShown: false }}>
+        <MenuStack.Navigator screenOptions={{ headerShown: false, animationEnabled: false }}>
             <MenuStack.Screen name="Menu" component={Menu} />
             <MenuStack.Screen name="ProductsList" component={ProductsList} />
             <MenuStack.Screen name="ProductDetails" component={ProductDetails} />
