@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { memo } from 'react'
+import { KeyboardTypeOptions } from 'react-native'
 import { StyleSheet, TextInput } from 'react-native'
 import { FONT_SIZE_14 } from '../../constants/fontsSizes'
 
@@ -7,9 +8,22 @@ interface CustomTextInputProps {
     placeholder: string
     editable?: boolean
     onChangeText: (text: string) => void
+    keyboardType?: KeyboardTypeOptions
+    ref?: React.LegacyRef<TextInput>
+    onFocus?: () => void
 }
 
-const CustomTextInput = ({ value, placeholder, editable, onChangeText }: CustomTextInputProps): JSX.Element => {
+const CustomTextInput = ({
+    value,
+    placeholder,
+    editable,
+    onChangeText,
+    keyboardType,
+    ref,
+    onFocus
+}: CustomTextInputProps): JSX.Element => {
+    console.log(`text input rendred ${placeholder}`)
+
     return (
         <>
             <TextInput
@@ -18,6 +32,10 @@ const CustomTextInput = ({ value, placeholder, editable, onChangeText }: CustomT
                 value={value}
                 onChangeText={onChangeText}
                 editable={editable}
+                keyboardType={keyboardType}
+                returnKeyType={'none'}
+                ref={ref}
+                onFocus={onFocus}
             />
         </>
     )
@@ -31,4 +49,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default CustomTextInput
+export default memo(CustomTextInput)

@@ -1,42 +1,55 @@
 import React, { useEffect, useState } from 'react'
 import { View, Text, SafeAreaView, ScrollView, Image } from 'react-native'
 
-import { NavBar, ProgressBar } from '../../components'
-
 import syncingStyles from './syncing.styels'
+import { NavBar, ProgressBar } from '../../components'
 
 import { useNavigation, NavigationProp } from '@react-navigation/native'
 import RootStackParamsList from '../../navigations/RootStackParamsList'
 
-import { saveItem, removeItem } from '../../helpers/AsyncStorage'
 import { getProducts } from '../../controllers/ProductsController'
 
+import realm from '../../configs/realm'
+
 import { Product } from '../../@types'
+
+console.log('Syncing screen loaded')
 
 const Syncing = (): JSX.Element => {
     const navigation = useNavigation<NavigationProp<RootStackParamsList>>()
 
     const [progress, setProgress] = useState(0)
 
-    useEffect(() => {
-        const syncData = async () => {
-            await removeItem('Products')
+    const syncData = async () => {
+        try {
+            const products: Product[] = (await getProducts()) || []
 
-            try {
-                const products: Product[] = (await getProducts()) || []
+            realm.write(() => {
+                products.forEach(product => {
+                    const existingProduct = realm.objectForPrimaryKey('Product', product.id)
 
-                await saveItem<Product[]>(`Products`, products)
+                    if (existingProduct) return
 
-                setProgress(100)
+                    realm.create('Product', {
+                        id: product.id,
+                        name: product.name,
+                        codeBar: product.codeBar.toString(),
+                        status: 'known'
+                    })
+                })
+            })
 
-                setTimeout(() => {
-                    navigation.navigate('BottomTabs')
-                }, 1000)
-            } catch (error) {
-                console.log(error)
-            }
+            setProgress(100)
+
+            setTimeout(() => {
+                navigation.navigate('BottomTabs')
+            }, 1000)
+        } catch (error) {
+            console.log('syncing error', error)
         }
+    }
 
+    useEffect(() => {
         syncData()
     }, [])
 

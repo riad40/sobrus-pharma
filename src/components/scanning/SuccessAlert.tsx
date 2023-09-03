@@ -15,7 +15,7 @@ interface SuccessAlertProps {
 
 const SuccessAlert = ({ visible, onClose, message, onContinue, onQuit }: SuccessAlertProps): JSX.Element => {
     return (
-        <Modal isVisible={visible} onBackdropPress={onClose} style={styles.modal} backdropOpacity={0.5}>
+        <Modal isVisible={visible} style={styles.modal} backdropOpacity={0.5}>
             <View style={styles.modalContainer}>
                 <Text style={styles.modalMessage}>{message}</Text>
 

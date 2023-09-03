@@ -1,14 +1,26 @@
 import React, { useState } from 'react'
 import { View, Text, StyleSheet, Pressable } from 'react-native'
+
+import { CustomInputContainer, CustomSelectModal, Button, DatePicker, ModalContainer } from '../'
+
 import colors from '../../constants/colors'
 import { FONT_SIZE_14, FONT_SIZE_18 } from '../../constants/fontsSizes'
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
-import Modal from 'react-native-modal'
-import { CustomInputContainer, CustomSelectModal, Button, DatePicker } from '../'
-import Ionicons from 'react-native-vector-icons/Ionicons'
-import { useNavigation, NavigationProp } from '@react-navigation/native'
-import RootStackParamsList from '../../navigations/RootStackParamsList'
 
+import Ionicons from 'react-native-vector-icons/Ionicons'
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
+
+import InventoryStackParamsList from '../../navigations/stacks/InventoryStack/InventoryStackParamsList'
+import { useNavigation, NavigationProp } from '@react-navigation/native'
+
+import { createInventory } from '../../controllers/InventoriesController'
+import { Inventory, InventoryProducts } from '../../@types'
+
+import { useAppDispatch } from '../../state/store'
+import { saveInventoryNotification } from '../../state/features/NotificationSlice'
+
+import realm, { getNextInventoryId } from '../../configs/realm'
+
+import dateFormatter from '../../helpers/dateFormatter'
 interface CreateInventoryModalProps {
     visible: boolean
     onClose: () => void
@@ -17,65 +29,78 @@ interface CreateInventoryModalProps {
 const options = ['Inventaire annuel', 'Inventaire tournant', 'Inventaire exceptionnel', 'Inventaire de contrôle']
 
 const CreateInventoryModal = ({ visible, onClose }: CreateInventoryModalProps): JSX.Element => {
-    const navigation = useNavigation<NavigationProp<RootStackParamsList>>()
+    const navigation = useNavigation<NavigationProp<InventoryStackParamsList>>()
 
     const [date, setDate] = useState<string>('')
+
     const [reason, setReason] = useState<string>('')
 
+    const dispatch = useAppDispatch()
+
+    const saveInventory = () => {
+        const newInventory: Inventory = {
+            id: getNextInventoryId(realm),
+            reason: reason || options[0],
+            date: date || dateFormatter(new Date()),
+            status: 'ouvert',
+            products: [] as InventoryProducts[]
+        }
+
+        createInventory(newInventory)
+
+        dispatch(saveInventoryNotification({ inventoriesNotification: "L'inventaire a été créé avec succès" }))
+
+        onClose()
+
+        navigation.navigate('ScanningScreen', { id: newInventory.id })
+    }
+
     return (
-        <Modal isVisible={visible} onBackdropPress={onClose} style={styles.modal} backdropOpacity={0.5}>
-            <View style={styles.modalContainer}>
-                <Pressable onPress={onClose}>
-                    <View style={styles.closeModalLine} />
-                </Pressable>
-                <Text style={styles.modalTitle}>Nouvel inventaire</Text>
+        <ModalContainer visible={visible} onClose={onClose}>
+            <Pressable onPress={onClose}>
+                <View style={styles.closeModalLine} />
+            </Pressable>
+            <Text style={styles.modalTitle}>Nouvel inventaire</Text>
 
-                <View style={styles.inputContainer}>
-                    <CustomInputContainer
-                        label="Date"
-                        icon="calendar-outline"
-                        element={
-                            <DatePicker
-                                setDate={value => {
-                                    setDate(value)
-                                }}
-                            />
-                        }
-                    />
-                    <CustomInputContainer
-                        label="Raison"
-                        icon="chevron-down-outline"
-                        element={
-                            <CustomSelectModal
-                                options={options}
-                                initialOption={options[0]}
-                                onSelect={value => {
-                                    setReason(value)
-                                }}
-                            />
-                        }
-                    />
-                </View>
-
-                <View style={styles.button}>
-                    <View style={styles.iconContainer}>
-                        <Ionicons name="chevron-back-outline" size={24} color={colors.primary} />
-                    </View>
-                    <Button
-                        text="Sauvegarder"
-                        onPress={() => {
-                            onClose()
-                            navigation.navigate('ScanningScreen', {
-                                data: {
-                                    date: date,
-                                    reason: reason
-                                }
-                            })
-                        }}
-                    />
-                </View>
+            <View style={styles.inputContainer}>
+                <CustomInputContainer
+                    label="Date"
+                    icon="calendar-outline"
+                    element={
+                        <DatePicker
+                            setDate={value => {
+                                setDate(value)
+                            }}
+                        />
+                    }
+                />
+                <CustomInputContainer
+                    label="Raison"
+                    icon="chevron-down-outline"
+                    element={
+                        <CustomSelectModal
+                            options={options}
+                            initialOption={options[0]}
+                            onSelect={value => {
+                                setReason(value)
+                            }}
+                        />
+                    }
+                />
             </View>
-        </Modal>
+
+            <View style={styles.button}>
+                <View style={styles.iconContainer}>
+                    <Ionicons name="chevron-back-outline" size={24} color={colors.primary} />
+                </View>
+                <Button
+                    text="Sauvegarder"
+                    onPress={() => {
+                        saveInventory()
+                    }}
+                />
+            </View>
+        </ModalContainer>
     )
 }
 
@@ -88,11 +113,9 @@ const styles = StyleSheet.create({
     modalContainer: {
         backgroundColor: colors.white,
         paddingHorizontal: wp(5),
-        borderRadius: wp(2),
-        minHeight: '50%',
-        maxHeight: '90%',
         borderTopLeftRadius: hp(5),
-        borderTopRightRadius: hp(5)
+        borderTopRightRadius: hp(5),
+        paddingBottom: wp(5)
     },
 
     closeModalLine: {

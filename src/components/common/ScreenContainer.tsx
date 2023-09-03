@@ -1,27 +1,34 @@
 import React from 'react'
-import { View, Text, StyleSheet, StatusBar } from 'react-native'
-import { FONT_SIZE_24 } from '../../constants/fontsSizes'
+import { View, Text, StyleSheet, StatusBar, Pressable } from 'react-native'
+
 import colors from '../../constants/colors'
+import { FONT_SIZE_24 } from '../../constants/fontsSizes'
+
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 
+import { useNavigation } from '@react-navigation/native'
+
 interface ScreenContainerProps {
     title: string
+    element?: React.ReactNode
     icon: boolean
     children?: React.ReactNode
 }
 
-const ScreenContainer = ({ title, icon, children }: ScreenContainerProps): JSX.Element => {
+const ScreenContainer = ({ title, icon, children, element }: ScreenContainerProps): JSX.Element => {
+    const navigation = useNavigation()
+
     return (
         <>
             <StatusBar backgroundColor={colors.primary} />
             <View style={styles.container}>
                 {icon && (
-                    <View style={styles.icon}>
+                    <Pressable style={styles.icon} onPress={() => navigation.goBack()}>
                         <Ionicons name="arrow-back" size={20} color={colors.white} />
-                    </View>
+                    </Pressable>
                 )}
-                <Text style={styles.title}>{title}</Text>
+                {element ? element : <Text style={styles.title}>{title}</Text>}
             </View>
 
             <View style={styles.screenBody}>{children}</View>
@@ -35,7 +42,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: wp(7),
         backgroundColor: colors.primary,
         height: hp(15),
-        paddingTop: hp(2)
+        paddingTop: hp(2),
+        alignItems: 'flex-start'
     },
 
     title: {
